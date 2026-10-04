@@ -1,0 +1,105 @@
+# =====================================================================
+# AeroGuard Project .gitignore
+# =====================================================================
+
+# --- Environment Variables & Secrets ---
+# Never commit credentials or API keys (Cartesia, Groq, Ground Station, etc.)
+.env
+*.env
+.env.*
+*.env.*
+*.local
+*.key
+*.pem
+*.secret
+
+# Explicitly keep configuration templates tracked
+!.env.example
+!*.env.example
+!**/.env.example
+
+# --- Python Bytecode & Optimization Caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Virtual Environments ---
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Testing, Coverage & Profiling ---
+.pytest_cache/
+**/.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# --- Audio, Media & Capture Dumps ---
+# Ignore ephemeral audio buffers, test recordings, or synthesized wav/mp3 files
+*.wav
+*.mp3
+*.pcm
+*.raw
+*.ogg
+*.flac
+*.aac
+
+# --- Logs & Runtime Output ---
+*.log
+logs/
+*.pid
+
+# --- IDEs & Code Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# --- Operating System Artifacts ---
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+*~
+.directory
