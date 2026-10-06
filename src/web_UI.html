@@ -1310,6 +1310,162 @@
             pointer-events: none;
             border-radius: 3px;
         }
+
+        /* ── AGY VOICE HUD & MICROPHONE ── */
+        #agy-voice-hud {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 600;
+            width: 290px;
+            background: rgba(6, 14, 26, 0.94);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--cyan);
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 10px rgba(0, 212, 255, 0.1);
+            backdrop-filter: blur(8px);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 9px 12px;
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+
+        #agy-voice-hud.listening {
+            border-left-color: var(--cyan);
+            box-shadow: 0 0 16px rgba(0, 212, 255, 0.35);
+        }
+
+        #agy-voice-hud.processing {
+            border-left-color: var(--yellow);
+            box-shadow: 0 0 14px rgba(255, 215, 0, 0.25);
+        }
+
+        #agy-voice-hud.speaking {
+            border-left-color: var(--green);
+            box-shadow: 0 0 16px rgba(0, 255, 157, 0.35);
+        }
+
+        #agy-voice-hud.error {
+            border-left-color: var(--red);
+            box-shadow: 0 0 14px rgba(255, 34, 68, 0.3);
+        }
+
+        .agy-hud-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 7px;
+            margin-bottom: 8px;
+        }
+
+        #agy-mic-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(10, 61, 122, 0.35);
+            border: 1.5px solid var(--muted);
+            color: var(--cyan);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            outline: none;
+            flex-shrink: 0;
+        }
+
+        #agy-mic-btn:hover:not(:disabled) {
+            border-color: var(--cyan);
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        #agy-mic-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #agy-mic-btn.listening {
+            background: rgba(0, 212, 255, 0.25);
+            border-color: var(--cyan);
+            box-shadow: 0 0 14px var(--cyan);
+            animation: agy-pulse 1.3s infinite ease-in-out;
+        }
+
+        @keyframes agy-pulse {
+            0% { box-shadow: 0 0 4px var(--cyan); }
+            50% { box-shadow: 0 0 18px var(--cyan); }
+            100% { box-shadow: 0 0 4px var(--cyan); }
+        }
+
+        .agy-hud-title-wrap {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .agy-hud-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            line-height: 1.1;
+        }
+
+        .agy-hud-sub {
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: var(--muted);
+        }
+
+        #agy-status-chip {
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-size: 9px;
+            letter-spacing: 1.5px;
+            font-weight: bold;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--muted);
+        }
+
+        #agy-status-chip.idle { color: var(--muted); border-color: var(--border); }
+        #agy-status-chip.listening { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
+        #agy-status-chip.processing { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
+        #agy-status-chip.speaking { color: var(--green); border-color: var(--green); background: rgba(0,255,157,0.1); }
+        #agy-status-chip.error { color: var(--red); border-color: var(--red); background: rgba(255,34,68,0.1); }
+
+        .agy-hud-body {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        .agy-line {
+            display: flex;
+            gap: 6px;
+        }
+
+        .agy-tag {
+            color: var(--cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 9px;
+            min-width: 32px;
+            flex-shrink: 0;
+        }
+
+        .agy-txt {
+            color: var(--text);
+            word-break: break-word;
+            max-height: 52px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -1353,6 +1509,10 @@
         <div id="data-source-badge">
             <div class="src-dot" id="src-dot" style="background:var(--cyan)"></div>
             <span id="src-label">BOOTING...</span>
+        </div>
+        <div id="topbar-voice-btn" class="top-stat" style="cursor:pointer;min-width:65px;border-color:var(--cyan);background:rgba(10,61,122,0.25);" onclick="startAgyVoice()" title="Click to speak with AGY">
+            <div class="top-stat-val" style="font-size:13px;"><span id="tb-mic-icon">🎙</span> <span id="tb-mic-status" style="font-size:10px;vertical-align:middle;color:var(--cyan);">AGY</span></div>
+            <div class="top-stat-label">Voice Control</div>
         </div>
         <div class="live-badge">
             <div class="live-dot"></div>
@@ -1483,6 +1643,30 @@
         <div id="map-container">
             <div id="map"></div>
             <div class="map-overlay" id="map-overlay">GLOBAL RADAR ACTIVE — TRACKING WORLDWIDE</div>
+
+            <!-- ── AGY VOICE HUD ── -->
+            <div id="agy-voice-hud" class="idle">
+                <div class="agy-hud-header">
+                    <button id="agy-mic-btn" class="idle" title="Click to speak with AGY" onclick="startAgyVoice()">
+                        <span id="agy-mic-icon">🎙</span>
+                    </button>
+                    <div class="agy-hud-title-wrap">
+                        <div class="agy-hud-title">🎙 AGY VOICE ASSISTANT</div>
+                        <div class="agy-hud-sub">TACTICAL GROUND CONTROL</div>
+                    </div>
+                    <div id="agy-status-chip" class="idle">IDLE</div>
+                </div>
+                <div class="agy-hud-body">
+                    <div class="agy-line">
+                        <span class="agy-tag">USER:</span>
+                        <span id="agy-user-display" class="agy-txt">—</span>
+                    </div>
+                    <div class="agy-line">
+                        <span class="agy-tag" style="color:var(--green)">AGY:</span>
+                        <span id="agy-response-display" class="agy-txt">—</span>
+                    </div>
+                </div>
+            </div>
 
             <!-- LEGEND -->
             <div
@@ -2758,6 +2942,171 @@
             computeMapMesh(); drawMapConnections(); tick();
             setTimeout(() => tmDraw(), 250);
         })();
+
+        // ── AGY VOICE AGENT INTEGRATION ──
+        const VOICE_BACKEND_URL = 'http://localhost:8001/voice/query';
+        let agyVoiceState = 'idle'; // idle | listening | processing | speaking | error
+        let agyActiveAudio = null;
+        let agyRecognition = null;
+        let agyErrorTimeout = null;
+
+        function setAgyVoiceState(state, message = null) {
+            agyVoiceState = state;
+            const hud = document.getElementById('agy-voice-hud');
+            const btn = document.getElementById('agy-mic-btn');
+            const chip = document.getElementById('agy-status-chip');
+            const tbStatus = document.getElementById('tb-mic-status');
+
+            if (!hud || !btn || !chip) return;
+
+            // Reset classes
+            hud.className = state;
+            btn.className = state;
+            chip.className = state;
+            chip.textContent = state.toUpperCase();
+            if (tbStatus) tbStatus.textContent = state === 'idle' ? 'AGY' : state.toUpperCase();
+
+            if (state === 'idle') {
+                btn.disabled = false;
+            } else if (state === 'listening') {
+                btn.disabled = false;
+            } else if (state === 'processing' || state === 'speaking') {
+                btn.disabled = true;
+            } else if (state === 'error') {
+                btn.disabled = true;
+                if (agyErrorTimeout) clearTimeout(agyErrorTimeout);
+                agyErrorTimeout = setTimeout(() => {
+                    setAgyVoiceState('idle');
+                }, 3500);
+            }
+        }
+
+        function showAgyUser(text) {
+            const el = document.getElementById('agy-user-display');
+            if (el) el.textContent = text || '—';
+        }
+
+        function showAgyResponse(text) {
+            const el = document.getElementById('agy-response-display');
+            if (el) el.textContent = text || '—';
+        }
+
+        function startAgyVoice() {
+            // Prevent multiple simultaneous clicks
+            if (agyVoiceState !== 'idle') {
+                if (agyVoiceState === 'speaking' && agyActiveAudio) {
+                    agyActiveAudio.pause();
+                    agyActiveAudio = null;
+                    setAgyVoiceState('idle');
+                }
+                return;
+            }
+
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRec) {
+                setAgyVoiceState('error');
+                showAgyResponse('Speech recognition not supported in this browser (please use Chrome or Edge).');
+                return;
+            }
+
+            try {
+                if (agyRecognition) {
+                    try { agyRecognition.abort(); } catch(e) {}
+                }
+                agyRecognition = new SpeechRec();
+                agyRecognition.lang = 'en-US';
+                agyRecognition.interimResults = false;
+                agyRecognition.maxAlternatives = 1;
+
+                setAgyVoiceState('listening');
+                showAgyUser('Listening... speak now');
+                showAgyResponse('—');
+
+                agyRecognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    showAgyUser(transcript);
+                    queryAgyBackend(transcript);
+                };
+
+                agyRecognition.onerror = function(event) {
+                    console.warn('[VOICE] Speech recognition error:', event.error);
+                    setAgyVoiceState('error');
+                    if (event.error === 'not-allowed') {
+                        showAgyResponse('Microphone access denied. Please allow microphone in browser permissions.');
+                    } else if (event.error === 'no-speech') {
+                        showAgyResponse('No speech detected. Please click mic and try again.');
+                    } else {
+                        showAgyResponse('Voice recognition error: ' + event.error);
+                    }
+                };
+
+                agyRecognition.onend = function() {
+                    if (agyVoiceState === 'listening') {
+                        setAgyVoiceState('idle');
+                    }
+                };
+
+                agyRecognition.start();
+            } catch (err) {
+                console.error('[VOICE] Recognition start error:', err);
+                setAgyVoiceState('error');
+                showAgyResponse('Failed to initialize microphone: ' + err.message);
+            }
+        }
+
+        async function queryAgyBackend(questionText) {
+            setAgyVoiceState('processing');
+            showAgyResponse('Contacting AGY...');
+
+            try {
+                const res = await fetch(VOICE_BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: questionText }),
+                    signal: AbortSignal.timeout(12000)
+                });
+
+                if (!res.ok) {
+                    const errJson = await res.json().catch(() => ({}));
+                    throw new Error(errJson.detail || ('HTTP error ' + res.status));
+                }
+
+                const data = await res.json();
+                showAgyResponse(data.response);
+
+                if (data.audio_base64) {
+                    setAgyVoiceState('speaking');
+                    const mime = data.mime_type || 'audio/wav';
+                    agyActiveAudio = new Audio(`data:${mime};base64,${data.audio_base64}`);
+                    agyActiveAudio.onended = () => {
+                        agyActiveAudio = null;
+                        setAgyVoiceState('idle');
+                    };
+                    agyActiveAudio.onerror = (e) => {
+                        console.warn('[VOICE] Audio playback failed:', e);
+                        agyActiveAudio = null;
+                        setAgyVoiceState('idle');
+                    };
+                    agyActiveAudio.play().catch(err => {
+                        console.warn('[VOICE] Autoplay prevented or failed:', err);
+                        setAgyVoiceState('idle');
+                    });
+                } else {
+                    // No TTS audio data (e.g. offline Cartesia), show response and return to idle
+                    setTimeout(() => {
+                        setAgyVoiceState('idle');
+                    }, 4000);
+                }
+            } catch (err) {
+                console.error('[VOICE] Backend query error:', err);
+                setAgyVoiceState('error');
+                if (err.name === 'TimeoutError') {
+                    showAgyResponse('Voice backend timed out.');
+                } else {
+                    showAgyResponse('Voice backend unavailable. Ensure voice bridge is running on port 8001.');
+                }
+            }
+        }
     </script>
 </body>
 

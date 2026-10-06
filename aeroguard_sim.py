@@ -26,6 +26,13 @@
 
 import os, sys, time, json, hmac, math, struct, socket, hashlib
 import logging, argparse, threading, traceback, heapq, queue
+
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
 from enum import IntEnum
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, field
@@ -714,6 +721,13 @@ def start_web_dashboard(gs: GroundStation, web_port: int = 8080):
     class Handler(http.server.BaseHTTPRequestHandler):
         def log_message(self, *a): pass  # silence HTTP logs
 
+        def do_OPTIONS(self):
+            self.send_response(200)
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Methods', 'GET, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', '*')
+            self.end_headers()
+
         def do_GET(self):
             if self.path == '/api/log':
                 data = json.dumps(gs.get_log(), default=str).encode()
@@ -722,12 +736,24 @@ def start_web_dashboard(gs: GroundStation, web_port: int = 8080):
                 self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(data)
-            elif self.path == '/' or self.path == '/index.html':
-                html = _dashboard_html(gs.node_id, gs.port, web_port)
+            elif self.path in ('/', '/index.html', '/ui', '/web_UI.html'):
+                ui_path = os.path.join(os.path.dirname(__file__), 'src', 'web_UI.html')
+                if os.path.exists(ui_path):
+                    with open(ui_path, 'rb') as f:
+                        html = f.read()
+                else:
+                    html = _dashboard_html(gs.node_id, gs.port, web_port).encode('utf-8')
                 self.send_response(200)
-                self.send_header('Content-Type', 'text/html')
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
-                self.wfile.write(html.encode())
+                self.wfile.write(html)
+            elif self.path == '/legacy':
+                html = _dashboard_html(gs.node_id, gs.port, web_port).encode('utf-8')
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/html; charset=utf-8')
+                self.end_headers()
+                self.wfile.write(html)
             else:
                 self.send_response(404)
                 self.end_headers()
