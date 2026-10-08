@@ -738,6 +738,7 @@ def start_web_dashboard(gs: GroundStation, web_port: int = 8080):
                 self.wfile.write(data)
             elif self.path in ('/', '/index.html', '/ui', '/web_UI.html'):
                 candidates = [
+                    os.path.join(os.path.dirname(__file__), '..', 'web', 'web_UI.html'),
                     os.path.join(os.path.dirname(__file__), '..', 'frontend', 'web_UI.html'),
                     os.path.join(os.path.dirname(__file__), 'frontend', 'web_UI.html'),
                     os.path.join(os.path.dirname(__file__), 'src', 'web_UI.html'),

@@ -1430,21 +1430,45 @@
         }
 
         @keyframes agy-pulse {
-            0% { box-shadow: 0 0 4px var(--cyan); }
-            50% { box-shadow: 0 0 18px var(--cyan); }
-            100% { box-shadow: 0 0 4px var(--cyan); }
+            0% {
+                box-shadow: 0 0 4px var(--cyan);
+            }
+
+            50% {
+                box-shadow: 0 0 18px var(--cyan);
+            }
+
+            100% {
+                box-shadow: 0 0 4px var(--cyan);
+            }
         }
 
         @keyframes agy-pulse-green {
-            0% { box-shadow: 0 0 4px var(--green); }
-            50% { box-shadow: 0 0 18px var(--green); }
-            100% { box-shadow: 0 0 4px var(--green); }
+            0% {
+                box-shadow: 0 0 4px var(--green);
+            }
+
+            50% {
+                box-shadow: 0 0 18px var(--green);
+            }
+
+            100% {
+                box-shadow: 0 0 4px var(--green);
+            }
         }
 
         @keyframes agy-pulse-yellow {
-            0% { box-shadow: 0 0 4px var(--yellow); }
-            50% { box-shadow: 0 0 16px var(--yellow); }
-            100% { box-shadow: 0 0 4px var(--yellow); }
+            0% {
+                box-shadow: 0 0 4px var(--yellow);
+            }
+
+            50% {
+                box-shadow: 0 0 16px var(--yellow);
+            }
+
+            100% {
+                box-shadow: 0 0 4px var(--yellow);
+            }
         }
 
         .agy-hud-title-wrap {
@@ -1479,12 +1503,41 @@
         }
 
         #agy-status-chip.idle,
-        #agy-status-chip.offline { color: var(--muted); border-color: var(--border); background: var(--panel); }
-        #agy-status-chip.listening { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
-        #agy-status-chip.processing { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
-        #agy-status-chip.speaking { color: var(--green); border-color: var(--green); background: rgba(0,255,157,0.1); }
-        #agy-status-chip.stopping { color: var(--orange); border-color: var(--orange); background: rgba(255,107,0,0.1); }
-        #agy-status-chip.error { color: var(--red); border-color: var(--red); background: rgba(255,34,68,0.1); }
+        #agy-status-chip.offline {
+            color: var(--muted);
+            border-color: var(--border);
+            background: var(--panel);
+        }
+
+        #agy-status-chip.listening {
+            color: var(--cyan);
+            border-color: var(--cyan);
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        #agy-status-chip.processing {
+            color: var(--yellow);
+            border-color: var(--yellow);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        #agy-status-chip.speaking {
+            color: var(--green);
+            border-color: var(--green);
+            background: rgba(0, 255, 157, 0.1);
+        }
+
+        #agy-status-chip.stopping {
+            color: var(--orange);
+            border-color: var(--orange);
+            background: rgba(255, 107, 0, 0.1);
+        }
+
+        #agy-status-chip.error {
+            color: var(--red);
+            border-color: var(--red);
+            background: rgba(255, 34, 68, 0.1);
+        }
 
         .agy-hud-body {
             display: flex;
@@ -1558,8 +1611,11 @@
             <div class="src-dot" id="src-dot" style="background:var(--cyan)"></div>
             <span id="src-label">BOOTING...</span>
         </div>
-        <div id="topbar-voice-btn" class="top-stat" style="cursor:pointer;min-width:65px;border-color:var(--cyan);background:rgba(10,61,122,0.25);" onclick="startAgyVoice()" title="Click to speak with AGY">
-            <div class="top-stat-val" style="font-size:13px;"><span id="tb-mic-icon">🎙</span> <span id="tb-mic-status" style="font-size:10px;vertical-align:middle;color:var(--cyan);">AGY</span></div>
+        <div id="topbar-voice-btn" class="top-stat"
+            style="cursor:pointer;min-width:65px;border-color:var(--cyan);background:rgba(10,61,122,0.25);"
+            onclick="startAgyVoice()" title="Click to speak with AGY">
+            <div class="top-stat-val" style="font-size:13px;"><span id="tb-mic-icon">🎙</span> <span id="tb-mic-status"
+                    style="font-size:10px;vertical-align:middle;color:var(--cyan);">AGY</span></div>
             <div class="top-stat-label">Voice Control</div>
         </div>
         <div class="live-badge">
@@ -1695,7 +1751,8 @@
             <!-- ── AGY VOICE HUD ── -->
             <div id="agy-voice-hud" class="offline">
                 <div class="agy-hud-header">
-                    <button id="agy-mic-btn" class="offline" title="Click to start persistent voice session" onclick="startAgyVoice()">
+                    <button id="agy-mic-btn" class="offline" title="Click to start persistent voice session"
+                        onclick="startAgyVoice()">
                         <span id="agy-mic-icon">🎙</span>
                     </button>
                     <div class="agy-hud-title-wrap">
@@ -1919,12 +1976,12 @@
         // ═══════════════════════════════════════════════════════════════
         // UTILS
         // ═══════════════════════════════════════════════════════════════
-        function rnd(a, b) {return a + Math.random() * (b - a);}
-        function clamp(v, mn, mx) {return Math.min(mx, Math.max(mn, v));}
-        function set(id, val) {const el = document.getElementById(id); if (el) el.textContent = val;}
-        function setClass(id, cls) {const el = document.getElementById(id); if (el) el.className = cls;}
-        function setCard(id, a) {const el = document.getElementById(id); if (!el) return; a ? el.classList.add('alert-card') : el.classList.remove('alert-card');}
-        function setBadge(id, on, label) {const el = document.getElementById(id); if (!el) return; el.className = `status-badge ${on ? 'status-on' : 'status-off'}`; el.textContent = on ? `${label} ✓` : `${label} ✗`;}
+        function rnd(a, b) { return a + Math.random() * (b - a); }
+        function clamp(v, mn, mx) { return Math.min(mx, Math.max(mn, v)); }
+        function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+        function setClass(id, cls) { const el = document.getElementById(id); if (el) el.className = cls; }
+        function setCard(id, a) { const el = document.getElementById(id); if (!el) return; a ? el.classList.add('alert-card') : el.classList.remove('alert-card'); }
+        function setBadge(id, on, label) { const el = document.getElementById(id); if (!el) return; el.className = `status-badge ${on ? 'status-on' : 'status-off'}`; el.textContent = on ? `${label} ✓` : `${label} ✗`; }
         let selectedAcId = null;
 
         // ═══════════════════════════════════════════════════════════════
@@ -1932,64 +1989,64 @@
         // ═══════════════════════════════════════════════════════════════
         const MAP_GS = [
             // ── INDIA (12) ──
-            {name: 'GS-BOM', city: 'Mumbai', region: 'INDIA', lat: 19.09, lon: 72.87, color: '#00ffb3', rangeKm: 420},
-            {name: 'GS-DEL', city: 'Delhi', region: 'INDIA', lat: 28.61, lon: 77.21, color: '#e040fb', rangeKm: 440},
-            {name: 'GS-CHN', city: 'Chennai', region: 'INDIA', lat: 13.08, lon: 80.27, color: '#00c8ff', rangeKm: 380},
-            {name: 'GS-CCU', city: 'Kolkata', region: 'INDIA', lat: 22.57, lon: 88.36, color: '#ff6b35', rangeKm: 360},
-            {name: 'GS-BPL', city: 'Bhopal', region: 'INDIA', lat: 23.25, lon: 77.40, color: '#ffb300', rangeKm: 380},
-            {name: 'GS-HYD', city: 'Hyderabad', region: 'INDIA', lat: 17.23, lon: 78.43, color: '#ff4fc8', rangeKm: 360},
-            {name: 'GS-BLR', city: 'Bangalore', region: 'INDIA', lat: 12.96, lon: 77.59, color: '#40e0ff', rangeKm: 340},
-            {name: 'GS-AMD', city: 'Ahmedabad', region: 'INDIA', lat: 23.07, lon: 72.63, color: '#ffe040', rangeKm: 350},
-            {name: 'GS-KCH', city: 'Karachi', region: 'INDIA', lat: 25.36, lon: 68.37, color: '#c0ff00', rangeKm: 320},
-            {name: 'GS-LKO', city: 'Lucknow', region: 'INDIA', lat: 26.76, lon: 80.88, color: '#80ff40', rangeKm: 360},
-            {name: 'GS-GAU', city: 'Guwahati', region: 'INDIA', lat: 26.10, lon: 91.58, color: '#ff8040', rangeKm: 300},
-            {name: 'GS-PNQ', city: 'Pune', region: 'INDIA', lat: 18.58, lon: 73.91, color: '#00d4ff', rangeKm: 320},
+            { name: 'GS-BOM', city: 'Mumbai', region: 'INDIA', lat: 19.09, lon: 72.87, color: '#00ffb3', rangeKm: 420 },
+            { name: 'GS-DEL', city: 'Delhi', region: 'INDIA', lat: 28.61, lon: 77.21, color: '#e040fb', rangeKm: 440 },
+            { name: 'GS-CHN', city: 'Chennai', region: 'INDIA', lat: 13.08, lon: 80.27, color: '#00c8ff', rangeKm: 380 },
+            { name: 'GS-CCU', city: 'Kolkata', region: 'INDIA', lat: 22.57, lon: 88.36, color: '#ff6b35', rangeKm: 360 },
+            { name: 'GS-BPL', city: 'Bhopal', region: 'INDIA', lat: 23.25, lon: 77.40, color: '#ffb300', rangeKm: 380 },
+            { name: 'GS-HYD', city: 'Hyderabad', region: 'INDIA', lat: 17.23, lon: 78.43, color: '#ff4fc8', rangeKm: 360 },
+            { name: 'GS-BLR', city: 'Bangalore', region: 'INDIA', lat: 12.96, lon: 77.59, color: '#40e0ff', rangeKm: 340 },
+            { name: 'GS-AMD', city: 'Ahmedabad', region: 'INDIA', lat: 23.07, lon: 72.63, color: '#ffe040', rangeKm: 350 },
+            { name: 'GS-KCH', city: 'Karachi', region: 'INDIA', lat: 25.36, lon: 68.37, color: '#c0ff00', rangeKm: 320 },
+            { name: 'GS-LKO', city: 'Lucknow', region: 'INDIA', lat: 26.76, lon: 80.88, color: '#80ff40', rangeKm: 360 },
+            { name: 'GS-GAU', city: 'Guwahati', region: 'INDIA', lat: 26.10, lon: 91.58, color: '#ff8040', rangeKm: 300 },
+            { name: 'GS-PNQ', city: 'Pune', region: 'INDIA', lat: 18.58, lon: 73.91, color: '#00d4ff', rangeKm: 320 },
             // ── EUROPE (8) ──
-            {name: 'GS-LHR', city: 'London', region: 'EUROPE', lat: 51.47, lon: -0.46, color: '#60aaff', rangeKm: 420},
-            {name: 'GS-FRA', city: 'Frankfurt', region: 'EUROPE', lat: 50.03, lon: 8.57, color: '#ffa060', rangeKm: 400},
-            {name: 'GS-CDG', city: 'Paris', region: 'EUROPE', lat: 49.01, lon: 2.55, color: '#a0ffd0', rangeKm: 400},
-            {name: 'GS-AMS', city: 'Amsterdam', region: 'EUROPE', lat: 52.31, lon: 4.77, color: '#d0a0ff', rangeKm: 380},
-            {name: 'GS-MAD', city: 'Madrid', region: 'EUROPE', lat: 40.47, lon: -3.57, color: '#ff6060', rangeKm: 400},
-            {name: 'GS-FCO', city: 'Rome', region: 'EUROPE', lat: 41.80, lon: 12.25, color: '#ffd080', rangeKm: 380},
-            {name: 'GS-IST', city: 'Istanbul', region: 'EUROPE', lat: 40.97, lon: 28.82, color: '#80ffc0', rangeKm: 400},
-            {name: 'GS-SVO', city: 'Moscow', region: 'EUROPE', lat: 55.97, lon: 37.41, color: '#c0e0ff', rangeKm: 450},
+            { name: 'GS-LHR', city: 'London', region: 'EUROPE', lat: 51.47, lon: -0.46, color: '#60aaff', rangeKm: 420 },
+            { name: 'GS-FRA', city: 'Frankfurt', region: 'EUROPE', lat: 50.03, lon: 8.57, color: '#ffa060', rangeKm: 400 },
+            { name: 'GS-CDG', city: 'Paris', region: 'EUROPE', lat: 49.01, lon: 2.55, color: '#a0ffd0', rangeKm: 400 },
+            { name: 'GS-AMS', city: 'Amsterdam', region: 'EUROPE', lat: 52.31, lon: 4.77, color: '#d0a0ff', rangeKm: 380 },
+            { name: 'GS-MAD', city: 'Madrid', region: 'EUROPE', lat: 40.47, lon: -3.57, color: '#ff6060', rangeKm: 400 },
+            { name: 'GS-FCO', city: 'Rome', region: 'EUROPE', lat: 41.80, lon: 12.25, color: '#ffd080', rangeKm: 380 },
+            { name: 'GS-IST', city: 'Istanbul', region: 'EUROPE', lat: 40.97, lon: 28.82, color: '#80ffc0', rangeKm: 400 },
+            { name: 'GS-SVO', city: 'Moscow', region: 'EUROPE', lat: 55.97, lon: 37.41, color: '#c0e0ff', rangeKm: 450 },
             // ── NORTH AMERICA (8) ──
-            {name: 'GS-JFK', city: 'New York', region: 'N.AMER', lat: 40.63, lon: -73.78, color: '#00ffee', rangeKm: 440},
-            {name: 'GS-LAX', city: 'Los Angeles', region: 'N.AMER', lat: 33.94, lon: -118.40, color: '#ffaa00', rangeKm: 440},
-            {name: 'GS-ORD', city: 'Chicago', region: 'N.AMER', lat: 41.97, lon: -87.90, color: '#00ddff', rangeKm: 420},
-            {name: 'GS-ATL', city: 'Atlanta', region: 'N.AMER', lat: 33.64, lon: -84.42, color: '#ff7755', rangeKm: 400},
-            {name: 'GS-DFW', city: 'Dallas', region: 'N.AMER', lat: 32.89, lon: -97.04, color: '#ccff00', rangeKm: 420},
-            {name: 'GS-YYZ', city: 'Toronto', region: 'N.AMER', lat: 43.68, lon: -79.63, color: '#ff88cc', rangeKm: 400},
-            {name: 'GS-MIA', city: 'Miami', region: 'N.AMER', lat: 25.79, lon: -80.29, color: '#00ffaa', rangeKm: 380},
-            {name: 'GS-SEA', city: 'Seattle', region: 'N.AMER', lat: 47.45, lon: -122.31, color: '#88ccff', rangeKm: 400},
+            { name: 'GS-JFK', city: 'New York', region: 'N.AMER', lat: 40.63, lon: -73.78, color: '#00ffee', rangeKm: 440 },
+            { name: 'GS-LAX', city: 'Los Angeles', region: 'N.AMER', lat: 33.94, lon: -118.40, color: '#ffaa00', rangeKm: 440 },
+            { name: 'GS-ORD', city: 'Chicago', region: 'N.AMER', lat: 41.97, lon: -87.90, color: '#00ddff', rangeKm: 420 },
+            { name: 'GS-ATL', city: 'Atlanta', region: 'N.AMER', lat: 33.64, lon: -84.42, color: '#ff7755', rangeKm: 400 },
+            { name: 'GS-DFW', city: 'Dallas', region: 'N.AMER', lat: 32.89, lon: -97.04, color: '#ccff00', rangeKm: 420 },
+            { name: 'GS-YYZ', city: 'Toronto', region: 'N.AMER', lat: 43.68, lon: -79.63, color: '#ff88cc', rangeKm: 400 },
+            { name: 'GS-MIA', city: 'Miami', region: 'N.AMER', lat: 25.79, lon: -80.29, color: '#00ffaa', rangeKm: 380 },
+            { name: 'GS-SEA', city: 'Seattle', region: 'N.AMER', lat: 47.45, lon: -122.31, color: '#88ccff', rangeKm: 400 },
             // ── EAST ASIA (6) ──
-            {name: 'GS-NRT', city: 'Tokyo', region: 'E.ASIA', lat: 35.77, lon: 140.39, color: '#ff6699', rangeKm: 420},
-            {name: 'GS-ICN', city: 'Seoul', region: 'E.ASIA', lat: 37.46, lon: 126.44, color: '#99ff66', rangeKm: 400},
-            {name: 'GS-PEK', city: 'Beijing', region: 'E.ASIA', lat: 40.08, lon: 116.58, color: '#ff9944', rangeKm: 440},
-            {name: 'GS-PVG', city: 'Shanghai', region: 'E.ASIA', lat: 31.14, lon: 121.81, color: '#44ddff', rangeKm: 420},
-            {name: 'GS-HKG', city: 'Hong Kong', region: 'E.ASIA', lat: 22.31, lon: 113.92, color: '#ffdd44', rangeKm: 360},
-            {name: 'GS-SIN', city: 'Singapore', region: 'E.ASIA', lat: 1.35, lon: 103.99, color: '#aa88ff', rangeKm: 360},
+            { name: 'GS-NRT', city: 'Tokyo', region: 'E.ASIA', lat: 35.77, lon: 140.39, color: '#ff6699', rangeKm: 420 },
+            { name: 'GS-ICN', city: 'Seoul', region: 'E.ASIA', lat: 37.46, lon: 126.44, color: '#99ff66', rangeKm: 400 },
+            { name: 'GS-PEK', city: 'Beijing', region: 'E.ASIA', lat: 40.08, lon: 116.58, color: '#ff9944', rangeKm: 440 },
+            { name: 'GS-PVG', city: 'Shanghai', region: 'E.ASIA', lat: 31.14, lon: 121.81, color: '#44ddff', rangeKm: 420 },
+            { name: 'GS-HKG', city: 'Hong Kong', region: 'E.ASIA', lat: 22.31, lon: 113.92, color: '#ffdd44', rangeKm: 360 },
+            { name: 'GS-SIN', city: 'Singapore', region: 'E.ASIA', lat: 1.35, lon: 103.99, color: '#aa88ff', rangeKm: 360 },
             // ── MIDDLE EAST (4) ──
-            {name: 'GS-DXB', city: 'Dubai', region: 'M.EAST', lat: 25.25, lon: 55.36, color: '#ffcc44', rangeKm: 440},
-            {name: 'GS-DOH', city: 'Doha', region: 'M.EAST', lat: 25.27, lon: 51.61, color: '#44ccff', rangeKm: 400},
-            {name: 'GS-CAI', city: 'Cairo', region: 'M.EAST', lat: 30.11, lon: 31.40, color: '#ccff44', rangeKm: 420},
-            {name: 'GS-AUH', city: 'Abu Dhabi', region: 'M.EAST', lat: 24.43, lon: 54.65, color: '#ff8844', rangeKm: 400},
+            { name: 'GS-DXB', city: 'Dubai', region: 'M.EAST', lat: 25.25, lon: 55.36, color: '#ffcc44', rangeKm: 440 },
+            { name: 'GS-DOH', city: 'Doha', region: 'M.EAST', lat: 25.27, lon: 51.61, color: '#44ccff', rangeKm: 400 },
+            { name: 'GS-CAI', city: 'Cairo', region: 'M.EAST', lat: 30.11, lon: 31.40, color: '#ccff44', rangeKm: 420 },
+            { name: 'GS-AUH', city: 'Abu Dhabi', region: 'M.EAST', lat: 24.43, lon: 54.65, color: '#ff8844', rangeKm: 400 },
             // ── SOUTH AMERICA (4) ──
-            {name: 'GS-GRU', city: 'Sao Paulo', region: 'S.AMER', lat: -23.43, lon: -46.47, color: '#44ff88', rangeKm: 440},
-            {name: 'GS-EZE', city: 'Buenos Aires', region: 'S.AMER', lat: -34.81, lon: -58.53, color: '#8844ff', rangeKm: 420},
-            {name: 'GS-BOG', city: 'Bogota', region: 'S.AMER', lat: 4.70, lon: -74.14, color: '#ff4488', rangeKm: 400},
-            {name: 'GS-LIM', city: 'Lima', region: 'S.AMER', lat: -12.02, lon: -77.11, color: '#44ffcc', rangeKm: 400},
+            { name: 'GS-GRU', city: 'Sao Paulo', region: 'S.AMER', lat: -23.43, lon: -46.47, color: '#44ff88', rangeKm: 440 },
+            { name: 'GS-EZE', city: 'Buenos Aires', region: 'S.AMER', lat: -34.81, lon: -58.53, color: '#8844ff', rangeKm: 420 },
+            { name: 'GS-BOG', city: 'Bogota', region: 'S.AMER', lat: 4.70, lon: -74.14, color: '#ff4488', rangeKm: 400 },
+            { name: 'GS-LIM', city: 'Lima', region: 'S.AMER', lat: -12.02, lon: -77.11, color: '#44ffcc', rangeKm: 400 },
             // ── AFRICA (3) ──
-            {name: 'GS-JNB', city: 'Johannesburg', region: 'AFRICA', lat: -26.13, lon: 28.24, color: '#ffaa44', rangeKm: 450},
-            {name: 'GS-NBO', city: 'Nairobi', region: 'AFRICA', lat: -1.32, lon: 36.92, color: '#44ffaa', rangeKm: 400},
-            {name: 'GS-CMN', city: 'Casablanca', region: 'AFRICA', lat: 33.37, lon: -7.59, color: '#ff44aa', rangeKm: 420},
+            { name: 'GS-JNB', city: 'Johannesburg', region: 'AFRICA', lat: -26.13, lon: 28.24, color: '#ffaa44', rangeKm: 450 },
+            { name: 'GS-NBO', city: 'Nairobi', region: 'AFRICA', lat: -1.32, lon: 36.92, color: '#44ffaa', rangeKm: 400 },
+            { name: 'GS-CMN', city: 'Casablanca', region: 'AFRICA', lat: 33.37, lon: -7.59, color: '#ff44aa', rangeKm: 420 },
             // ── OCEANIA (2) ──
-            {name: 'GS-SYD', city: 'Sydney', region: 'OCEANIA', lat: -33.94, lon: 151.17, color: '#44aaff', rangeKm: 440},
-            {name: 'GS-MEL', city: 'Melbourne', region: 'OCEANIA', lat: -37.67, lon: 144.84, color: '#ffcc88', rangeKm: 420},
+            { name: 'GS-SYD', city: 'Sydney', region: 'OCEANIA', lat: -33.94, lon: 151.17, color: '#44aaff', rangeKm: 440 },
+            { name: 'GS-MEL', city: 'Melbourne', region: 'OCEANIA', lat: -37.67, lon: 144.84, color: '#ffcc88', rangeKm: 420 },
             // ── OCEAN RELAY BUOYS (3 strategic points) ──
-            {name: 'GS-ATL-MID', city: 'Mid-Atlantic', region: 'OCEAN', lat: 30.0, lon: -40.0, color: '#aaffcc', rangeKm: 500},
-            {name: 'GS-PAC-MID', city: 'Mid-Pacific', region: 'OCEAN', lat: 30.0, lon: -170.0, color: '#ccaaff', rangeKm: 500},
-            {name: 'GS-IND-MID', city: 'Indian Ocean', region: 'OCEAN', lat: -15.0, lon: 75.0, color: '#ffaacc', rangeKm: 500},
+            { name: 'GS-ATL-MID', city: 'Mid-Atlantic', region: 'OCEAN', lat: 30.0, lon: -40.0, color: '#aaffcc', rangeKm: 500 },
+            { name: 'GS-PAC-MID', city: 'Mid-Pacific', region: 'OCEAN', lat: 30.0, lon: -170.0, color: '#ccaaff', rangeKm: 500 },
+            { name: 'GS-IND-MID', city: 'Indian Ocean', region: 'OCEAN', lat: -15.0, lon: 75.0, color: '#ffaacc', rangeKm: 500 },
         ];
 
         // ═══════════════════════════════════════════════════════════════
@@ -1997,25 +2054,25 @@
         // ═══════════════════════════════════════════════════════════════
         const GLOBAL_ROUTES = [
             // India domestic
-            {org: 'BOM', dst: 'DEL', lat: [19.09, 28.61], lon: [72.87, 77.21], al: 'AI'}, {org: 'DEL', dst: 'BOM', lat: [28.61, 19.09], lon: [77.21, 72.87], al: '6E'}, {org: 'BOM', dst: 'CHN', lat: [19.09, 13.08], lon: [72.87, 80.27], al: 'SG'}, {org: 'DEL', dst: 'CCU', lat: [28.61, 22.57], lon: [77.21, 88.36], al: 'AI'}, {org: 'BOM', dst: 'HYD', lat: [19.09, 17.23], lon: [72.87, 78.43], al: 'IX'}, {org: 'BLR', dst: 'DEL', lat: [12.96, 28.61], lon: [77.59, 77.21], al: 'UK'}, {org: 'CCU', dst: 'BOM', lat: [22.57, 19.09], lon: [88.36, 72.87], al: 'G8'}, {org: 'DEL', dst: 'AMD', lat: [28.61, 23.07], lon: [77.21, 72.63], al: 'AI'}, {org: 'HYD', dst: 'BOM', lat: [17.23, 19.09], lon: [78.43, 72.87], al: 'SG'}, {org: 'CHN', dst: 'BLR', lat: [13.08, 12.96], lon: [80.27, 77.59], al: '6E'},
+            { org: 'BOM', dst: 'DEL', lat: [19.09, 28.61], lon: [72.87, 77.21], al: 'AI' }, { org: 'DEL', dst: 'BOM', lat: [28.61, 19.09], lon: [77.21, 72.87], al: '6E' }, { org: 'BOM', dst: 'CHN', lat: [19.09, 13.08], lon: [72.87, 80.27], al: 'SG' }, { org: 'DEL', dst: 'CCU', lat: [28.61, 22.57], lon: [77.21, 88.36], al: 'AI' }, { org: 'BOM', dst: 'HYD', lat: [19.09, 17.23], lon: [72.87, 78.43], al: 'IX' }, { org: 'BLR', dst: 'DEL', lat: [12.96, 28.61], lon: [77.59, 77.21], al: 'UK' }, { org: 'CCU', dst: 'BOM', lat: [22.57, 19.09], lon: [88.36, 72.87], al: 'G8' }, { org: 'DEL', dst: 'AMD', lat: [28.61, 23.07], lon: [77.21, 72.63], al: 'AI' }, { org: 'HYD', dst: 'BOM', lat: [17.23, 19.09], lon: [78.43, 72.87], al: 'SG' }, { org: 'CHN', dst: 'BLR', lat: [13.08, 12.96], lon: [80.27, 77.59], al: '6E' },
             // India Int'l
-            {org: 'BOM', dst: 'DXB', lat: [19.09, 25.25], lon: [72.87, 55.36], al: 'EK'}, {org: 'DEL', dst: 'LHR', lat: [28.61, 51.47], lon: [77.21, -0.46], al: 'BA'}, {org: 'DEL', dst: 'JFK', lat: [28.61, 40.63], lon: [77.21, -73.78], al: 'AI'}, {org: 'BOM', dst: 'SIN', lat: [19.09, 1.35], lon: [72.87, 103.99], al: 'SQ'}, {org: 'DEL', dst: 'FRA', lat: [28.61, 50.03], lon: [77.21, 8.57], al: 'LH'}, {org: 'BOM', dst: 'NRT', lat: [19.09, 35.77], lon: [72.87, 140.39], al: 'NH'}, {org: 'CCU', dst: 'PEK', lat: [22.57, 40.08], lon: [88.36, 116.58], al: 'CA'},
+            { org: 'BOM', dst: 'DXB', lat: [19.09, 25.25], lon: [72.87, 55.36], al: 'EK' }, { org: 'DEL', dst: 'LHR', lat: [28.61, 51.47], lon: [77.21, -0.46], al: 'BA' }, { org: 'DEL', dst: 'JFK', lat: [28.61, 40.63], lon: [77.21, -73.78], al: 'AI' }, { org: 'BOM', dst: 'SIN', lat: [19.09, 1.35], lon: [72.87, 103.99], al: 'SQ' }, { org: 'DEL', dst: 'FRA', lat: [28.61, 50.03], lon: [77.21, 8.57], al: 'LH' }, { org: 'BOM', dst: 'NRT', lat: [19.09, 35.77], lon: [72.87, 140.39], al: 'NH' }, { org: 'CCU', dst: 'PEK', lat: [22.57, 40.08], lon: [88.36, 116.58], al: 'CA' },
             // Europe
-            {org: 'LHR', dst: 'CDG', lat: [51.47, 49.01], lon: [-0.46, 2.55], al: 'BA'}, {org: 'FRA', dst: 'MAD', lat: [50.03, 40.47], lon: [8.57, -3.57], al: 'IB'}, {org: 'AMS', dst: 'JFK', lat: [52.31, 40.63], lon: [4.77, -73.78], al: 'KL'}, {org: 'CDG', dst: 'NRT', lat: [49.01, 35.77], lon: [2.55, 140.39], al: 'AF'}, {org: 'LHR', dst: 'SYD', lat: [51.47, -33.94], lon: [-0.46, 151.17], al: 'QF'}, {org: 'MAD', dst: 'GRU', lat: [40.47, -23.43], lon: [-3.57, -46.47], al: 'IB'}, {org: 'FCO', dst: 'CAI', lat: [41.80, 30.11], lon: [12.25, 31.40], al: 'MS'}, {org: 'IST', dst: 'DXB', lat: [40.97, 25.25], lon: [28.82, 55.36], al: 'TK'}, {org: 'SVO', dst: 'PEK', lat: [55.97, 40.08], lon: [37.41, 116.58], al: 'SU'}, {org: 'LHR', dst: 'JNB', lat: [51.47, -26.13], lon: [-0.46, 28.24], al: 'BA'}, {org: 'FRA', dst: 'NRT', lat: [50.03, 35.77], lon: [8.57, 140.39], al: 'LH'}, {org: 'AMS', dst: 'SIN', lat: [52.31, 1.35], lon: [4.77, 103.99], al: 'KL'},
+            { org: 'LHR', dst: 'CDG', lat: [51.47, 49.01], lon: [-0.46, 2.55], al: 'BA' }, { org: 'FRA', dst: 'MAD', lat: [50.03, 40.47], lon: [8.57, -3.57], al: 'IB' }, { org: 'AMS', dst: 'JFK', lat: [52.31, 40.63], lon: [4.77, -73.78], al: 'KL' }, { org: 'CDG', dst: 'NRT', lat: [49.01, 35.77], lon: [2.55, 140.39], al: 'AF' }, { org: 'LHR', dst: 'SYD', lat: [51.47, -33.94], lon: [-0.46, 151.17], al: 'QF' }, { org: 'MAD', dst: 'GRU', lat: [40.47, -23.43], lon: [-3.57, -46.47], al: 'IB' }, { org: 'FCO', dst: 'CAI', lat: [41.80, 30.11], lon: [12.25, 31.40], al: 'MS' }, { org: 'IST', dst: 'DXB', lat: [40.97, 25.25], lon: [28.82, 55.36], al: 'TK' }, { org: 'SVO', dst: 'PEK', lat: [55.97, 40.08], lon: [37.41, 116.58], al: 'SU' }, { org: 'LHR', dst: 'JNB', lat: [51.47, -26.13], lon: [-0.46, 28.24], al: 'BA' }, { org: 'FRA', dst: 'NRT', lat: [50.03, 35.77], lon: [8.57, 140.39], al: 'LH' }, { org: 'AMS', dst: 'SIN', lat: [52.31, 1.35], lon: [4.77, 103.99], al: 'KL' },
             // North America
-            {org: 'JFK', dst: 'LAX', lat: [40.63, 33.94], lon: [-73.78, -118.40], al: 'AA'}, {org: 'ORD', dst: 'JFK', lat: [41.97, 40.63], lon: [-87.90, -73.78], al: 'UA'}, {org: 'LAX', dst: 'NRT', lat: [33.94, 35.77], lon: [-118.40, 140.39], al: 'UA'}, {org: 'YYZ', dst: 'LHR', lat: [43.68, 51.47], lon: [-79.63, -0.46], al: 'AC'}, {org: 'MIA', dst: 'GRU', lat: [25.79, -23.43], lon: [-80.29, -46.47], al: 'LA'}, {org: 'ATL', dst: 'CDG', lat: [33.64, 49.01], lon: [-84.42, 2.55], al: 'DL'}, {org: 'DFW', dst: 'NRT', lat: [32.89, 35.77], lon: [-97.04, 140.39], al: 'AA'}, {org: 'SEA', dst: 'ICN', lat: [47.45, 37.46], lon: [-122.31, 126.44], al: 'KE'}, {org: 'JFK', dst: 'LHR', lat: [40.63, 51.47], lon: [-73.78, -0.46], al: 'AA'}, {org: 'LAX', dst: 'SYD', lat: [33.94, -33.94], lon: [-118.40, 151.17], al: 'QF'}, {org: 'ORD', dst: 'FRA', lat: [41.97, 50.03], lon: [-87.90, 8.57], al: 'LH'}, {org: 'SEA', dst: 'NRT', lat: [47.45, 35.77], lon: [-122.31, 140.39], al: 'NH'},
+            { org: 'JFK', dst: 'LAX', lat: [40.63, 33.94], lon: [-73.78, -118.40], al: 'AA' }, { org: 'ORD', dst: 'JFK', lat: [41.97, 40.63], lon: [-87.90, -73.78], al: 'UA' }, { org: 'LAX', dst: 'NRT', lat: [33.94, 35.77], lon: [-118.40, 140.39], al: 'UA' }, { org: 'YYZ', dst: 'LHR', lat: [43.68, 51.47], lon: [-79.63, -0.46], al: 'AC' }, { org: 'MIA', dst: 'GRU', lat: [25.79, -23.43], lon: [-80.29, -46.47], al: 'LA' }, { org: 'ATL', dst: 'CDG', lat: [33.64, 49.01], lon: [-84.42, 2.55], al: 'DL' }, { org: 'DFW', dst: 'NRT', lat: [32.89, 35.77], lon: [-97.04, 140.39], al: 'AA' }, { org: 'SEA', dst: 'ICN', lat: [47.45, 37.46], lon: [-122.31, 126.44], al: 'KE' }, { org: 'JFK', dst: 'LHR', lat: [40.63, 51.47], lon: [-73.78, -0.46], al: 'AA' }, { org: 'LAX', dst: 'SYD', lat: [33.94, -33.94], lon: [-118.40, 151.17], al: 'QF' }, { org: 'ORD', dst: 'FRA', lat: [41.97, 50.03], lon: [-87.90, 8.57], al: 'LH' }, { org: 'SEA', dst: 'NRT', lat: [47.45, 35.77], lon: [-122.31, 140.39], al: 'NH' },
             // East Asia
-            {org: 'NRT', dst: 'ICN', lat: [35.77, 37.46], lon: [140.39, 126.44], al: 'KE'}, {org: 'PEK', dst: 'PVG', lat: [40.08, 31.14], lon: [116.58, 121.81], al: 'MU'}, {org: 'ICN', dst: 'LAX', lat: [37.46, 33.94], lon: [126.44, -118.40], al: 'KE'}, {org: 'HKG', dst: 'SYD', lat: [22.31, -33.94], lon: [113.92, 151.17], al: 'QF'}, {org: 'SIN', dst: 'BKK', lat: [1.35, 13.69], lon: [103.99, 100.75], al: 'TG'}, {org: 'KUL', dst: 'SIN', lat: [2.74, 1.35], lon: [101.70, 103.99], al: 'MH'}, {org: 'BKK', dst: 'HKG', lat: [13.69, 22.31], lon: [100.75, 113.92], al: 'CX'}, {org: 'NRT', dst: 'SYD', lat: [35.77, -33.94], lon: [140.39, 151.17], al: 'QF'}, {org: 'PVG', dst: 'LHR', lat: [31.14, 51.47], lon: [121.81, -0.46], al: 'MU'}, {org: 'ICN', dst: 'FRA', lat: [37.46, 50.03], lon: [126.44, 8.57], al: 'LH'},
+            { org: 'NRT', dst: 'ICN', lat: [35.77, 37.46], lon: [140.39, 126.44], al: 'KE' }, { org: 'PEK', dst: 'PVG', lat: [40.08, 31.14], lon: [116.58, 121.81], al: 'MU' }, { org: 'ICN', dst: 'LAX', lat: [37.46, 33.94], lon: [126.44, -118.40], al: 'KE' }, { org: 'HKG', dst: 'SYD', lat: [22.31, -33.94], lon: [113.92, 151.17], al: 'QF' }, { org: 'SIN', dst: 'BKK', lat: [1.35, 13.69], lon: [103.99, 100.75], al: 'TG' }, { org: 'KUL', dst: 'SIN', lat: [2.74, 1.35], lon: [101.70, 103.99], al: 'MH' }, { org: 'BKK', dst: 'HKG', lat: [13.69, 22.31], lon: [100.75, 113.92], al: 'CX' }, { org: 'NRT', dst: 'SYD', lat: [35.77, -33.94], lon: [140.39, 151.17], al: 'QF' }, { org: 'PVG', dst: 'LHR', lat: [31.14, 51.47], lon: [121.81, -0.46], al: 'MU' }, { org: 'ICN', dst: 'FRA', lat: [37.46, 50.03], lon: [126.44, 8.57], al: 'LH' },
             // Middle East
-            {org: 'DXB', dst: 'LHR', lat: [25.25, 51.47], lon: [55.36, -0.46], al: 'EK'}, {org: 'DXB', dst: 'JFK', lat: [25.25, 40.63], lon: [55.36, -73.78], al: 'EK'}, {org: 'DXB', dst: 'SYD', lat: [25.25, -33.94], lon: [55.36, 151.17], al: 'EK'}, {org: 'DOH', dst: 'LHR', lat: [25.27, 51.47], lon: [51.61, -0.46], al: 'QR'}, {org: 'AUH', dst: 'JFK', lat: [24.43, 40.63], lon: [54.65, -73.78], al: 'EY'}, {org: 'CAI', dst: 'DXB', lat: [30.11, 25.25], lon: [31.40, 55.36], al: 'EK'},
+            { org: 'DXB', dst: 'LHR', lat: [25.25, 51.47], lon: [55.36, -0.46], al: 'EK' }, { org: 'DXB', dst: 'JFK', lat: [25.25, 40.63], lon: [55.36, -73.78], al: 'EK' }, { org: 'DXB', dst: 'SYD', lat: [25.25, -33.94], lon: [55.36, 151.17], al: 'EK' }, { org: 'DOH', dst: 'LHR', lat: [25.27, 51.47], lon: [51.61, -0.46], al: 'QR' }, { org: 'AUH', dst: 'JFK', lat: [24.43, 40.63], lon: [54.65, -73.78], al: 'EY' }, { org: 'CAI', dst: 'DXB', lat: [30.11, 25.25], lon: [31.40, 55.36], al: 'EK' },
             // South America
-            {org: 'GRU', dst: 'EZE', lat: [-23.43, -34.81], lon: [-46.47, -58.53], al: 'LA'}, {org: 'BOG', dst: 'MIA', lat: [4.70, 25.79], lon: [-74.14, -80.29], al: 'AV'}, {org: 'LIM', dst: 'GRU', lat: [-12.02, -23.43], lon: [-77.11, -46.47], al: 'LA'}, {org: 'GRU', dst: 'LHR', lat: [-23.43, 51.47], lon: [-46.47, -0.46], al: 'BA'}, {org: 'EZE', dst: 'MAD', lat: [-34.81, 40.47], lon: [-58.53, -3.57], al: 'IB'},
+            { org: 'GRU', dst: 'EZE', lat: [-23.43, -34.81], lon: [-46.47, -58.53], al: 'LA' }, { org: 'BOG', dst: 'MIA', lat: [4.70, 25.79], lon: [-74.14, -80.29], al: 'AV' }, { org: 'LIM', dst: 'GRU', lat: [-12.02, -23.43], lon: [-77.11, -46.47], al: 'LA' }, { org: 'GRU', dst: 'LHR', lat: [-23.43, 51.47], lon: [-46.47, -0.46], al: 'BA' }, { org: 'EZE', dst: 'MAD', lat: [-34.81, 40.47], lon: [-58.53, -3.57], al: 'IB' },
             // Africa
-            {org: 'JNB', dst: 'LHR', lat: [-26.13, 51.47], lon: [28.24, -0.46], al: 'BA'}, {org: 'NBO', dst: 'DXB', lat: [-1.32, 25.25], lon: [36.92, 55.36], al: 'EK'}, {org: 'CMN', dst: 'CDG', lat: [33.37, 49.01], lon: [-7.59, 2.55], al: 'AF'}, {org: 'JNB', dst: 'SYD', lat: [-26.13, -33.94], lon: [28.24, 151.17], al: 'QF'}, {org: 'NBO', dst: 'LHR', lat: [-1.32, 51.47], lon: [36.92, -0.46], al: 'BA'},
+            { org: 'JNB', dst: 'LHR', lat: [-26.13, 51.47], lon: [28.24, -0.46], al: 'BA' }, { org: 'NBO', dst: 'DXB', lat: [-1.32, 25.25], lon: [36.92, 55.36], al: 'EK' }, { org: 'CMN', dst: 'CDG', lat: [33.37, 49.01], lon: [-7.59, 2.55], al: 'AF' }, { org: 'JNB', dst: 'SYD', lat: [-26.13, -33.94], lon: [28.24, 151.17], al: 'QF' }, { org: 'NBO', dst: 'LHR', lat: [-1.32, 51.47], lon: [36.92, -0.46], al: 'BA' },
             // Oceania
-            {org: 'SYD', dst: 'MEL', lat: [-33.94, -37.67], lon: [151.17, 144.84], al: 'QF'}, {org: 'SYD', dst: 'LAX', lat: [-33.94, 33.94], lon: [151.17, -118.40], al: 'UA'}, {org: 'SYD', dst: 'NRT', lat: [-33.94, 35.77], lon: [151.17, 140.39], al: 'NH'}, {org: 'MEL', dst: 'DXB', lat: [-37.67, 25.25], lon: [144.84, 55.36], al: 'EK'},
+            { org: 'SYD', dst: 'MEL', lat: [-33.94, -37.67], lon: [151.17, 144.84], al: 'QF' }, { org: 'SYD', dst: 'LAX', lat: [-33.94, 33.94], lon: [151.17, -118.40], al: 'UA' }, { org: 'SYD', dst: 'NRT', lat: [-33.94, 35.77], lon: [151.17, 140.39], al: 'NH' }, { org: 'MEL', dst: 'DXB', lat: [-37.67, 25.25], lon: [144.84, 55.36], al: 'EK' },
             // Trans-oceanic additional
-            {org: 'JFK', dst: 'NRT', lat: [40.63, 35.77], lon: [-73.78, 140.39], al: 'JL'}, {org: 'LAX', dst: 'SIN', lat: [33.94, 1.35], lon: [-118.40, 103.99], al: 'SQ'}, {org: 'LHR', dst: 'SIN', lat: [51.47, 1.35], lon: [-0.46, 103.99], al: 'SQ'}, {org: 'FRA', dst: 'SIN', lat: [50.03, 1.35], lon: [8.57, 103.99], al: 'LH'}, {org: 'AMS', dst: 'HKG', lat: [52.31, 22.31], lon: [4.77, 113.92], al: 'KL'},
+            { org: 'JFK', dst: 'NRT', lat: [40.63, 35.77], lon: [-73.78, 140.39], al: 'JL' }, { org: 'LAX', dst: 'SIN', lat: [33.94, 1.35], lon: [-118.40, 103.99], al: 'SQ' }, { org: 'LHR', dst: 'SIN', lat: [51.47, 1.35], lon: [-0.46, 103.99], al: 'SQ' }, { org: 'FRA', dst: 'SIN', lat: [50.03, 1.35], lon: [8.57, 103.99], al: 'LH' }, { org: 'AMS', dst: 'HKG', lat: [52.31, 22.31], lon: [4.77, 113.92], al: 'KL' },
         ];
 
         function generateGlobalFleet(count = 500) {
@@ -2054,10 +2111,10 @@
         let meshSpeedMultiplier = 1.0;
         let mapMeshAcData = [];
 
-        const map = L.map('map', {zoomControl: false, attributionControl: false}).setView([25, 20], 3);
+        const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([25, 20], 3);
         // Keyless basemap: Esri World Street Map (OSM returns "403 Access blocked" tiles to pages opened
         // from file:// or without a proper Referer; CARTO shows an API-key watermark).
-        L.control.attribution({position: 'topright', prefix: false}).addTo(map);
+        L.control.attribution({ position: 'topright', prefix: false }).addTo(map);
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
             maxZoom: 19,
             attribution: 'Tiles &copy; Esri'
@@ -2066,7 +2123,7 @@
         // Waypoints for AG-7423
         const WAYPOINTS = [[19.0896, 72.8656], [20.2, 73.9], [21.5, 74.8], [22.5, 75.7], [23.8, 76.9], [25.0, 78.2], [26.4, 79.8], [27.2, 78.5], [28.6139, 77.2090]];
         const routeCoords = WAYPOINTS.map(w => L.latLng(w[0], w[1]));
-        L.polyline(routeCoords, {color: 'rgba(0,212,255,0.4)', weight: 1.5, dashArray: '4,8'}).addTo(map);
+        L.polyline(routeCoords, { color: 'rgba(0,212,255,0.4)', weight: 1.5, dashArray: '4,8' }).addTo(map);
 
         // Draw ground stations
         const connLinesGroup = L.layerGroup().addTo(map);
@@ -2101,7 +2158,7 @@
     ">${gs.city}</div>`,
                 iconSize: [60, 28], iconAnchor: [7, 7], className: ''
             });
-            L.marker([gs.lat, gs.lon], {icon: gsIcon, zIndexOffset: 900}).addTo(map)
+            L.marker([gs.lat, gs.lon], { icon: gsIcon, zIndexOffset: 900 }).addTo(map)
                 .bindPopup(`<b style="color:${gs.color}">${gs.name}</b><br>${gs.city} — ${gs.region}<br>Range: ${gs.rangeKm} km`);
         });
 
@@ -2123,12 +2180,12 @@
         }
 
         function computeMapMesh() {
-            mapMeshAcData.forEach(ac => {ac.status = 'lost'; ac.gsConn = null; ac.relayVia = null; ac.hopCount = 99; ac.meshPath = [];});
+            mapMeshAcData.forEach(ac => { ac.status = 'lost'; ac.gsConn = null; ac.relayVia = null; ac.hopCount = 99; ac.meshPath = []; });
             // Pass 1: direct GS
             mapMeshAcData.forEach(ac => {
                 MAP_GS.forEach(gs => {
-                    const d = latLonDistKm({lat: ac.lat, lon: ac.lon}, {lat: gs.lat, lon: gs.lon});
-                    if (d <= gs.rangeKm && ac.hopCount > 1) {ac.status = 'direct'; ac.gsConn = gs; ac.hopCount = 1; ac.meshPath = [];}
+                    const d = latLonDistKm({ lat: ac.lat, lon: ac.lon }, { lat: gs.lat, lon: gs.lon });
+                    if (d <= gs.rangeKm && ac.hopCount > 1) { ac.status = 'direct'; ac.gsConn = gs; ac.hopCount = 1; ac.meshPath = []; }
                 });
             });
             // Bellman-Ford
@@ -2139,9 +2196,9 @@
                     if (ac.status === 'direct') return;
                     mapMeshAcData.forEach(other => {
                         if (other.id === ac.id || other.status === 'lost') return;
-                        const d = latLonDistKm({lat: ac.lat, lon: ac.lon}, {lat: other.lat, lon: other.lon});
+                        const d = latLonDistKm({ lat: ac.lat, lon: ac.lon }, { lat: other.lat, lon: other.lon });
                         const h = other.hopCount + 1;
-                        if (d <= MESH_RANGE_KM && h < ac.hopCount) {ac.status = 'relay'; ac.relayVia = other; ac.hopCount = h; ac.meshPath = [other, ...(other.meshPath || [])]; changed = true;}
+                        if (d <= MESH_RANGE_KM && h < ac.hopCount) { ac.status = 'relay'; ac.relayVia = other; ac.hopCount = h; ac.meshPath = [other, ...(other.meshPath || [])]; changed = true; }
                     });
                 });
             }
@@ -2150,14 +2207,14 @@
         function autoHealMesh() {
             computeMapMesh();
             const lost = mapMeshAcData.filter(ac => ac.status === 'lost');
-            if (lost.length === 0) {updateHealStatus(0); return;}
+            if (lost.length === 0) { updateHealStatus(0); return; }
             let bridged = 0;
             lost.slice(0, 4).forEach(lostAc => {
                 let best = null, bestD = Infinity;
                 mapMeshAcData.forEach(other => {
                     if (other.id === lostAc.id || other.status === 'lost') return;
-                    const d = latLonDistKm({lat: lostAc.lat, lon: lostAc.lon}, {lat: other.lat, lon: other.lon});
-                    if (d < bestD) {bestD = d; best = other;}
+                    const d = latLonDistKm({ lat: lostAc.lat, lon: lostAc.lon }, { lat: other.lat, lon: other.lon });
+                    if (d < bestD) { bestD = d; best = other; }
                 });
                 if (!best) return;
                 const hops = Math.ceil(bestD / MESH_RANGE_KM);
@@ -2167,7 +2224,7 @@
                     const tLat = lostAc.lat + stepLat * h, tLon = lostAc.lon + stepLon * h;
                     const covered = mapMeshAcData.some(o => {
                         if (o.id === lostAc.id) return false;
-                        return latLonDistKm({lat: tLat, lon: tLon}, {lat: o.lat, lon: o.lon}) <= MESH_RANGE_KM * 0.45;
+                        return latLonDistKm({ lat: tLat, lon: tLon }, { lat: o.lat, lon: o.lon }) <= MESH_RANGE_KM * 0.45;
                     });
                     if (!covered) {
                         autoBridgeCounter++;
@@ -2185,21 +2242,21 @@
           <div style="color:#00D4FF;font-family:'Share Tech Mono',monospace;font-size:6px;text-align:center;text-shadow:0 1px 2px rgba(0,0,0,0.8);white-space:nowrap;">BRG</div>`,
                             iconSize: [28, 22], iconAnchor: [10, 11], className: ''
                         });
-                        newAc.marker = L.marker([newAc.lat, newAc.lon], {icon, zIndexOffset: 650}).addTo(map);
+                        newAc.marker = L.marker([newAc.lat, newAc.lon], { icon, zIndexOffset: 650 }).addTo(map);
                         newAc.marker.on('click', () => selectMapAircraft(newAc.id));
                         bridged++;
                     }
                 }
             });
-            if (bridged > 0) {computeMapMesh(); updateMapMeshMarkers(); drawMapConnections();}
+            if (bridged > 0) { computeMapMesh(); updateMapMeshMarkers(); drawMapConnections(); }
             updateHealStatus(mapMeshAcData.filter(ac => ac.status === 'lost').length);
         }
 
         function updateHealStatus(n) {
             const el = document.getElementById('oor-lost-count');
-            if (el) {el.textContent = n; el.style.color = n > 0 ? '#ff3a3a' : '#00ff9d';}
+            if (el) { el.textContent = n; el.style.color = n > 0 ? '#ff3a3a' : '#00ff9d'; }
             const h = document.getElementById('heal-status');
-            if (h) {h.textContent = n === 0 ? '● ALL SYSTEMS CONNECTED GLOBALLY' : `⚠ AUTO-HEALING ${n} NODES`; h.style.color = n === 0 ? '#00ff9d' : '#ff9d00';}
+            if (h) { h.textContent = n === 0 ? '● ALL SYSTEMS CONNECTED GLOBALLY' : `⚠ AUTO-HEALING ${n} NODES`; h.style.color = n === 0 ? '#00ff9d' : '#ff9d00'; }
         }
 
         function addAlert(sev, type, msg) {
@@ -2226,17 +2283,17 @@
                     const a = Math.max(0.15, 0.6 - depth * 0.04);
                     const col = isBridge ? 'rgba(0,212,255,0.6)' : 'rgba(255,157,0,0.5)';
                     const w = Math.max(0.4, 1.4 - depth * 0.08);
-                    connLinesGroup.addLayer(L.polyline([[cur.lat, cur.lon], [next.lat, next.lon]], {color: col, weight: w, opacity: a, dashArray: '5,5'}));
+                    connLinesGroup.addLayer(L.polyline([[cur.lat, cur.lon], [next.lat, next.lon]], { color: col, weight: w, opacity: a, dashArray: '5,5' }));
                     cur = next; depth++;
                 }
                 if (cur.status === 'direct' && cur.gsConn) {
                     const gs = cur.gsConn;
-                    connLinesGroup.addLayer(L.polyline([[cur.lat, cur.lon], [gs.lat, gs.lon]], {color: gs.color, weight: 1, opacity: 0.4, dashArray: '3,4'}));
+                    connLinesGroup.addLayer(L.polyline([[cur.lat, cur.lon], [gs.lat, gs.lon]], { color: gs.color, weight: 1, opacity: 0.4, dashArray: '3,4' }));
                 }
             }
             mapMeshAcData.forEach(ac => {
                 if (ac.status === 'direct' && ac.gsConn) {
-                    connLinesGroup.addLayer(L.polyline([[ac.lat, ac.lon], [ac.gsConn.lat, ac.gsConn.lon]], {color: ac.gsConn.color, weight: 1, opacity: 0.35}));
+                    connLinesGroup.addLayer(L.polyline([[ac.lat, ac.lon], [ac.gsConn.lat, ac.gsConn.lon]], { color: ac.gsConn.color, weight: 1, opacity: 0.35 }));
                 } else if (ac.status === 'relay' && ac.relayVia) {
                     drawChain(ac);
                 }
@@ -2284,16 +2341,16 @@
         function initMapMeshMarkers() {
             mapMeshAcData.forEach(ac => {
                 if (!ac.marker) {
-                    ac.marker = L.marker([ac.lat, ac.lon], {icon: createFR24Icon(ac), zIndexOffset: ac.isLive ? 700 : 500}).addTo(map);
+                    ac.marker = L.marker([ac.lat, ac.lon], { icon: createFR24Icon(ac), zIndexOffset: ac.isLive ? 700 : 500 }).addTo(map);
                     ac.marker.on('click', () => selectMapAircraft(ac.id));
-                    ac.marker.bindTooltip(`${ac.label} | ${(ac.alt || '?').toLocaleString()} ft | ${ac.speed || '?'} kts`, {permanent: false, direction: 'top'});
+                    ac.marker.bindTooltip(`${ac.label} | ${(ac.alt || '?').toLocaleString()} ft | ${ac.speed || '?'} kts`, { permanent: false, direction: 'top' });
                 }
             });
         }
 
         function updateMapMeshMarkers() {
             mapMeshAcData.forEach(ac => {
-                if (!ac.marker) {ac.marker = L.marker([ac.lat, ac.lon], {icon: createFR24Icon(ac), zIndexOffset: 500}).addTo(map); ac.marker.on('click', () => selectMapAircraft(ac.id)); return;}
+                if (!ac.marker) { ac.marker = L.marker([ac.lat, ac.lon], { icon: createFR24Icon(ac), zIndexOffset: 500 }).addTo(map); ac.marker.on('click', () => selectMapAircraft(ac.id)); return; }
                 ac.marker.setIcon(createFR24Icon(ac));
                 ac.marker.setLatLng([ac.lat, ac.lon]);
             });
@@ -2343,7 +2400,7 @@
                 status: 'unknown', gsConn: null, marker: null, connLines: [], meshPath: [], hopCount: 99, relayVia: null,
             };
             mapMeshAcData.push(newAc);
-            newAc.marker = L.marker([lat, lon], {icon: createFR24Icon(newAc), zIndexOffset: 500}).addTo(map);
+            newAc.marker = L.marker([lat, lon], { icon: createFR24Icon(newAc), zIndexOffset: 500 }).addTo(map);
             newAc.marker.on('click', () => selectMapAircraft(newAc.id));
             updateFleetDisplay();
         }
@@ -2372,20 +2429,20 @@
         let dataSource = 'sim';
         function updateSourceBadge(src, count) {
             const dot = document.getElementById('src-dot'), lbl = document.getElementById('src-label');
-            if (src === 'live') {dot.style.background = '#00FF9D'; lbl.textContent = `LIVE — ${count} AC`;}
-            else if (src === 'cache') {dot.style.background = '#FF6B00'; lbl.textContent = `CACHED — ${count} AC`;}
-            else {dot.style.background = '#00D4FF'; lbl.textContent = `GLOBAL SIM — ${count} AC`;}
+            if (src === 'live') { dot.style.background = '#00FF9D'; lbl.textContent = `LIVE — ${count} AC`; }
+            else if (src === 'cache') { dot.style.background = '#FF6B00'; lbl.textContent = `CACHED — ${count} AC`; }
+            else { dot.style.background = '#00D4FF'; lbl.textContent = `GLOBAL SIM — ${count} AC`; }
         }
         // ── LIVE SOURCES (no API key needed) ─────────────────────────
         // Primary: adsb.lol, then airplanes.live (both keyless, community ADS-B, readsb JSON format).
         // Fallback: OpenSky anonymous, using SMALL bounding boxes (a global query burns the daily credit quota).
         // Each "hub" is queried with radius (nautical miles, max 250) so coverage is spread across regions.
         const LIVE_HUBS = [
-            {n: 'Mumbai', lat: 19.09, lon: 72.87}, {n: 'Delhi', lat: 28.56, lon: 77.10},
-            {n: 'Chennai', lat: 13.00, lon: 80.18}, {n: 'Kolkata', lat: 22.65, lon: 88.45},
-            {n: 'Dubai', lat: 25.25, lon: 55.36}, {n: 'London', lat: 51.47, lon: -0.45},
-            {n: 'Frankfurt', lat: 50.03, lon: 8.56}, {n: 'New York', lat: 40.64, lon: -73.78},
-            {n: 'Singapore', lat: 1.36, lon: 103.99}, {n: 'Tokyo', lat: 35.55, lon: 139.78}
+            { n: 'Mumbai', lat: 19.09, lon: 72.87 }, { n: 'Delhi', lat: 28.56, lon: 77.10 },
+            { n: 'Chennai', lat: 13.00, lon: 80.18 }, { n: 'Kolkata', lat: 22.65, lon: 88.45 },
+            { n: 'Dubai', lat: 25.25, lon: 55.36 }, { n: 'London', lat: 51.47, lon: -0.45 },
+            { n: 'Frankfurt', lat: 50.03, lon: 8.56 }, { n: 'New York', lat: 40.64, lon: -73.78 },
+            { n: 'Singapore', lat: 1.36, lon: 103.99 }, { n: 'Tokyo', lat: 35.55, lon: 139.78 }
         ];
         const LIVE_RADIUS_NM = 250;
         let liveSourceName = '';
@@ -2402,7 +2459,7 @@
             }));
         }
         async function fetchReadsbHub(base, h) {
-            const r = await fetch(`${base}/v2/point/${h.lat}/${h.lon}/${LIVE_RADIUS_NM}`, {signal: AbortSignal.timeout(8000)});
+            const r = await fetch(`${base}/v2/point/${h.lat}/${h.lon}/${LIVE_RADIUS_NM}`, { signal: AbortSignal.timeout(8000) });
             if (!r.ok) throw new Error(base + ' ' + r.status);
             const j = await r.json();
             return mapReadsb(j.ac || j.aircraft || []);
@@ -2410,7 +2467,7 @@
         async function fetchReadsbNetwork(name, base) {
             const res = await Promise.allSettled(LIVE_HUBS.map(h => fetchReadsbHub(base, h)));
             const seen = new Map();
-            res.forEach(x => {if (x.status === 'fulfilled') x.value.forEach(ac => seen.set(ac.id, ac));});
+            res.forEach(x => { if (x.status === 'fulfilled') x.value.forEach(ac => seen.set(ac.id, ac)); });
             if (seen.size < 5) throw new Error(name + ': no data (blocked / CORS / rate-limited)');
             liveSourceName = name;
             return [...seen.values()].slice(0, 600);
@@ -2421,7 +2478,7 @@
             const out = new Map();
             for (const [la1, lo1, la2, lo2] of boxes) {
                 try {
-                    const r = await fetch(`https://opensky-network.org/api/states/all?lamin=${la1}&lomin=${lo1}&lamax=${la2}&lomax=${lo2}`, {signal: AbortSignal.timeout(8000)});
+                    const r = await fetch(`https://opensky-network.org/api/states/all?lamin=${la1}&lomin=${lo1}&lamax=${la2}&lomax=${lo2}`, { signal: AbortSignal.timeout(8000) });
                     if (!r.ok) continue;
                     const j = await r.json();
                     (j.states || []).filter(s => s[5] && s[6] && !s[8]).forEach(s => out.set(s[0], {
@@ -2452,7 +2509,7 @@
             if (!FR24_PROXY) return [];
             if (Date.now() - fr24Last < FR24_EVERY_MS) return fr24Cache;
             fr24Last = Date.now();
-            const r = await fetch(`${FR24_PROXY}/fr24?bounds=${FR24_BOUNDS}&limit=${FR24_LIMIT}`, {signal: AbortSignal.timeout(8000)});
+            const r = await fetch(`${FR24_PROXY}/fr24?bounds=${FR24_BOUNDS}&limit=${FR24_LIMIT}`, { signal: AbortSignal.timeout(8000) });
             if (!r.ok) throw new Error('FR24 proxy ' + r.status);
             const j = await r.json();
             fr24Cache = (j.data || []).filter(f => typeof f.lat === 'number' && typeof f.lon === 'number' && (f.alt > 0 || f.gs > 30)).map(f => ({
@@ -2474,10 +2531,10 @@
             ];
             let base = null, lastErr;
             for (const a of attempts) {
-                try {base = await a(); break;} catch (e) {lastErr = e; console.warn('[AeroGuard] live source failed:', e.message);}
+                try { base = await a(); break; } catch (e) { lastErr = e; console.warn('[AeroGuard] live source failed:', e.message); }
             }
             let fr = [];
-            try {fr = await fetchFR24();} catch (e) {console.warn('[AeroGuard] FR24 failed:', e.message);}
+            try { fr = await fetchFR24(); } catch (e) { console.warn('[AeroGuard] FR24 failed:', e.message); }
             if (!base && fr.length < 5) throw lastErr || new Error('no live data');
             const m = new Map((base || []).map(a => [a.id, a]));
             fr.forEach(a => m.set(a.id, a));            // FR24 wins on duplicates
@@ -2488,12 +2545,12 @@
             let fetched = null; let src = 'sim';
             try {
                 fetched = await fetchLiveAircraft();
-                if (fetched && fetched.length > 5) {src = 'live'; liveCache = fetched; addAlert('info', 'DATA-LIVE', `${liveSourceName}: ${fetched.length} live aircraft ingested (no API key).`);}
+                if (fetched && fetched.length > 5) { src = 'live'; liveCache = fetched; addAlert('info', 'DATA-LIVE', `${liveSourceName}: ${fetched.length} live aircraft ingested (no API key).`); }
             } catch (e) {
-                if (liveCache.length > 0) {fetched = liveCache; src = 'cache'; addAlert('warning', 'DATA-CACHE', 'Using cached positions with simulated movement.');}
+                if (liveCache.length > 0) { fetched = liveCache; src = 'cache'; addAlert('warning', 'DATA-CACHE', 'Using cached positions with simulated movement.'); }
             }
             if (fetched && fetched.length > 0) {
-                mapMeshAcData.filter(ac => ac.isLive).forEach(ac => {if (ac.marker) map.removeLayer(ac.marker);});
+                mapMeshAcData.filter(ac => ac.isLive).forEach(ac => { if (ac.marker) map.removeLayer(ac.marker); });
                 mapMeshAcData = mapMeshAcData.filter(ac => !ac.isLive);
                 fetched.forEach(ac => {
                     if (isNaN(ac.lat) || isNaN(ac.lon)) return;
@@ -2513,20 +2570,20 @@
         // ═══════════════════════════════════════════════════════════════
         // MAIN FLIGHT TELEMETRY
         // ═══════════════════════════════════════════════════════════════
-        let state = {wpIdx: 0, t: 0, altitude: 35000, speed: 450, fuel: 15000, battery: 98.5, pressure: 11.5, engine1: true, engine2: true, transponder: true, acars: true, anomaly: 'NONE', packets: 0, alerts: 0, criticals: 0, warnings: 0, startTime: Date.now()};
+        let state = { wpIdx: 0, t: 0, altitude: 35000, speed: 450, fuel: 15000, battery: 98.5, pressure: 11.5, engine1: true, engine2: true, transponder: true, acars: true, anomaly: 'NONE', packets: 0, alerts: 0, criticals: 0, warnings: 0, startTime: Date.now() };
         let cryptoKey = null;
         const encoder = new TextEncoder();
-        async function generateKey() {if (!window.crypto || !window.crypto.subtle) return "KEY"; try {return await crypto.subtle.generateKey({name: 'AES-GCM', length: 128}, true, ['encrypt', 'decrypt']);} catch (e) {return "KEY";} }
-        async function encryptPayload(key, data) {if (!window.crypto || !window.crypto.subtle || typeof key === 'string') return btoa(unescape(encodeURIComponent(JSON.stringify(data)))).slice(0, 110) + '...'; try {const iv = crypto.getRandomValues(new Uint8Array(12)); const enc = await crypto.subtle.encrypt({name: 'AES-GCM', iv}, key, encoder.encode(JSON.stringify(data))); const c = new Uint8Array(iv.byteLength + enc.byteLength); c.set(iv, 0); c.set(new Uint8Array(enc), iv.byteLength); return btoa(String.fromCharCode(...c));} catch (e) {return btoa(unescape(encodeURIComponent(JSON.stringify(data)))).slice(0, 110) + '...';} }
-        async function hmacSign(key, data) {if (!window.crypto || !window.crypto.subtle || typeof key === 'string') return 'e3b0c44298fc1c149afbf4c8...'; try {const hk = await crypto.subtle.importKey('raw', encoder.encode('aeroguard_hmac_secret_2024'), {name: 'HMAC', hash: 'SHA-256'}, false, ['sign']); const sig = await crypto.subtle.sign('HMAC', hk, encoder.encode(JSON.stringify(data))); return btoa(String.fromCharCode(...new Uint8Array(sig))).slice(0, 24) + '...';} catch (e) {return 'e3b0c44298fc1c149afbf4c8...';} }
+        async function generateKey() { if (!window.crypto || !window.crypto.subtle) return "KEY"; try { return await crypto.subtle.generateKey({ name: 'AES-GCM', length: 128 }, true, ['encrypt', 'decrypt']); } catch (e) { return "KEY"; } }
+        async function encryptPayload(key, data) { if (!window.crypto || !window.crypto.subtle || typeof key === 'string') return btoa(unescape(encodeURIComponent(JSON.stringify(data)))).slice(0, 110) + '...'; try { const iv = crypto.getRandomValues(new Uint8Array(12)); const enc = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoder.encode(JSON.stringify(data))); const c = new Uint8Array(iv.byteLength + enc.byteLength); c.set(iv, 0); c.set(new Uint8Array(enc), iv.byteLength); return btoa(String.fromCharCode(...c)); } catch (e) { return btoa(unescape(encodeURIComponent(JSON.stringify(data)))).slice(0, 110) + '...'; } }
+        async function hmacSign(key, data) { if (!window.crypto || !window.crypto.subtle || typeof key === 'string') return 'e3b0c44298fc1c149afbf4c8...'; try { const hk = await crypto.subtle.importKey('raw', encoder.encode('aeroguard_hmac_secret_2024'), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']); const sig = await crypto.subtle.sign('HMAC', hk, encoder.encode(JSON.stringify(data))); return btoa(String.fromCharCode(...new Uint8Array(sig))).slice(0, 24) + '...'; } catch (e) { return 'e3b0c44298fc1c149afbf4c8...'; } }
 
         function getPosition() {
-            if (state.wpIdx >= WAYPOINTS.length - 1) {state.wpIdx = 0; state.t = 0;}
+            if (state.wpIdx >= WAYPOINTS.length - 1) { state.wpIdx = 0; state.t = 0; }
             const a = WAYPOINTS[state.wpIdx], b = WAYPOINTS[state.wpIdx + 1];
             const lat = a[0] + (b[0] - a[0]) * state.t, lon = a[1] + (b[1] - a[1]) * state.t;
             const hdg = (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI + 360) % 360;
-            state.t += 0.004; if (state.t >= 1) {state.t = 0; state.wpIdx++;}
-            return {lat: +lat.toFixed(5), lon: +lon.toFixed(5), hdg: +hdg.toFixed(1)};
+            state.t += 0.004; if (state.t >= 1) { state.t = 0; state.wpIdx++; }
+            return { lat: +lat.toFixed(5), lon: +lon.toFixed(5), hdg: +hdg.toFixed(1) };
         }
         function updatePhysics() {
             let vs = 0;
@@ -2541,22 +2598,22 @@
         }
         function detectAnomalies(vs) {
             const al = [];
-            if (state.anomaly !== 'NONE') al.push({sev: 'critical', type: state.anomaly, msg: `Anomaly: ${state.anomaly.replace(/_/g, ' ')} — AeroGuard transmitting.`});
-            if (vs < -1500) al.push({sev: 'critical', type: 'RAPID_DESCENT', msg: `Vertical speed ${vs.toFixed(0)} ft/min.`});
-            if (!state.transponder) al.push({sev: 'critical', type: 'TRANSPONDER_OFF', msg: 'Transponder DISABLED — AeroGuard only active tracker.'});
-            if (!state.acars) al.push({sev: 'warning', type: 'ACARS_OFF', msg: 'ACARS stopped. Telemetry via AeroGuard node.'});
-            if (!state.engine1) al.push({sev: 'critical', type: 'ENGINE_1_FAILURE', msg: 'Engine 1 failure.'});
-            if (state.pressure < 8) al.push({sev: 'critical', type: 'DEPRESSURISATION', msg: `Cabin pressure: ${state.pressure.toFixed(1)} psi.`});
-            if (state.battery < 20) al.push({sev: 'warning', type: 'LOW_BATTERY', msg: `Battery at ${state.battery.toFixed(1)}%.`});
+            if (state.anomaly !== 'NONE') al.push({ sev: 'critical', type: state.anomaly, msg: `Anomaly: ${state.anomaly.replace(/_/g, ' ')} — AeroGuard transmitting.` });
+            if (vs < -1500) al.push({ sev: 'critical', type: 'RAPID_DESCENT', msg: `Vertical speed ${vs.toFixed(0)} ft/min.` });
+            if (!state.transponder) al.push({ sev: 'critical', type: 'TRANSPONDER_OFF', msg: 'Transponder DISABLED — AeroGuard only active tracker.' });
+            if (!state.acars) al.push({ sev: 'warning', type: 'ACARS_OFF', msg: 'ACARS stopped. Telemetry via AeroGuard node.' });
+            if (!state.engine1) al.push({ sev: 'critical', type: 'ENGINE_1_FAILURE', msg: 'Engine 1 failure.' });
+            if (state.pressure < 8) al.push({ sev: 'critical', type: 'DEPRESSURISATION', msg: `Cabin pressure: ${state.pressure.toFixed(1)} psi.` });
+            if (state.battery < 20) al.push({ sev: 'warning', type: 'LOW_BATTERY', msg: `Battery at ${state.battery.toFixed(1)}%.` });
             return al;
         }
-        let trail = L.polyline([], {color: '#00D4FF', weight: 2, opacity: 0.7}).addTo(map);
+        let trail = L.polyline([], { color: '#00D4FF', weight: 2, opacity: 0.7 }).addTo(map);
         let trailPoints = [];
         const mkIcon = (distress) => L.divIcon({
             html: `<div style="color:${distress ? '#FF2244' : '#00D4FF'};font-size:28px;filter:drop-shadow(0 0 8px ${distress ? '#FF2244' : '#00D4FF'});transform:rotate(30deg);${distress ? 'animation:icon-pulse .6s ease-in-out infinite;' : ''}">✈</div>`,
             iconSize: [32, 32], iconAnchor: [16, 16], className: ''
         });
-        let flightMarker = L.marker([19.09, 72.87], {icon: mkIcon(false), zIndexOffset: 1000}).addTo(map);
+        let flightMarker = L.marker([19.09, 72.87], { icon: mkIcon(false), zIndexOffset: 1000 }).addTo(map);
         flightMarker.on('click', () => showMainFlightDetail());
 
         function renderTelemetry(vs, pos) {
@@ -2583,7 +2640,7 @@
             document.getElementById('map-overlay').style.color = distress ? '#FF2244' : '#00D4FF';
             flightMarker.setIcon(mkIcon(distress)); flightMarker.setLatLng([pos.lat, pos.lon]);
             trailPoints.push([pos.lat, pos.lon]); if (trailPoints.length > 300) trailPoints.shift();
-            trail.setLatLngs(trailPoints); trail.setStyle({color: distress ? '#FF2244' : '#00D4FF'});
+            trail.setLatLngs(trailPoints); trail.setStyle({ color: distress ? '#FF2244' : '#00D4FF' });
             state.packets++; set('stat-packets', state.packets); set('s-packets-rx', state.packets);
             const el = Math.floor((Date.now() - state.startTime) / 1000);
             set('stat-uptime', `${String(Math.floor(el / 60)).padStart(2, '0')}:${String(el % 60).padStart(2, '0')}`);
@@ -2612,23 +2669,23 @@
         }
         async function tick() {
             const pos = getPosition(); const vs = updatePhysics(); const anms = detectAnomalies(vs);
-            const payload = {device_id: 'AG-ALPHA-001', flight_id: 'AG7423', timestamp: new Date().toISOString(), latitude: pos.lat, longitude: pos.lon, altitude_ft: state.altitude, speed_knots: state.speed, heading_deg: pos.hdg, vertical_speed: vs, fuel_kg: state.fuel, cabin_pressure: state.pressure, engine_status: [state.engine1, state.engine2], transponder_on: state.transponder, acars_on: state.acars, anomaly: state.anomaly, distress: state.anomaly !== 'NONE', battery_pct: state.battery};
+            const payload = { device_id: 'AG-ALPHA-001', flight_id: 'AG7423', timestamp: new Date().toISOString(), latitude: pos.lat, longitude: pos.lon, altitude_ft: state.altitude, speed_knots: state.speed, heading_deg: pos.hdg, vertical_speed: vs, fuel_kg: state.fuel, cabin_pressure: state.pressure, engine_status: [state.engine1, state.engine2], transponder_on: state.transponder, acars_on: state.acars, anomaly: state.anomaly, distress: state.anomaly !== 'NONE', battery_pct: state.battery };
             renderTelemetry(vs, pos); renderAlerts(anms); renderEncryption(payload); set('s-integrity', '100%');
         }
         function setAnomaly(type) {
             state.anomaly = type;
-            if (type === 'NONE') {state.altitude = 35000; state.speed = 450; state.pressure = 11.5; state.engine1 = true; state.engine2 = true; state.transponder = true; state.acars = true; document.getElementById('alert-list').innerHTML = '<div class="no-alerts" id="no-alerts-msg">● NO ACTIVE ALERTS<br><br>Global radar nominal.<br>All aircraft tracked.</div>'; state.criticals = 0; state.warnings = 0; set('s-critical', 0); set('s-warning', 0);}
+            if (type === 'NONE') { state.altitude = 35000; state.speed = 450; state.pressure = 11.5; state.engine1 = true; state.engine2 = true; state.transponder = true; state.acars = true; document.getElementById('alert-list').innerHTML = '<div class="no-alerts" id="no-alerts-msg">● NO ACTIVE ALERTS<br><br>Global radar nominal.<br>All aircraft tracked.</div>'; state.criticals = 0; state.warnings = 0; set('s-critical', 0); set('s-warning', 0); }
             ['btn-normal', 'btn-descent', 'btn-hijack', 'btn-engine', 'btn-depress'].forEach(id => document.getElementById(id)?.classList.remove('active'));
-            const m = {'NONE': 'btn-normal', 'RAPID_DESCENT': 'btn-descent', 'HIJACK': 'btn-hijack', 'ENGINE_FAIL': 'btn-engine', 'DEPRESSURISATION': 'btn-depress'};
+            const m = { 'NONE': 'btn-normal', 'RAPID_DESCENT': 'btn-descent', 'HIJACK': 'btn-hijack', 'ENGINE_FAIL': 'btn-engine', 'DEPRESSURISATION': 'btn-depress' };
             document.getElementById(m[type])?.classList.add('active');
         }
         function setSimSpeed(mult) {
             meshSpeedMultiplier = mult;
-            ['btn-spd-pause', 'btn-spd-slow', 'btn-spd-norm', 'btn-spd-fast', 'btn-spd-ultra'].forEach(id => {const el = document.getElementById(id); if (el) {el.classList.remove('active', 'nominal');} });
-            const m2 = {0: 'btn-spd-pause', 0.3: 'btn-spd-slow', 1: 'btn-spd-norm', 3: 'btn-spd-fast', 8: 'btn-spd-ultra'};
-            const aid = m2[mult]; if (aid) {const el = document.getElementById(aid); if (el) {el.classList.add('active'); if (mult > 0) el.classList.add('nominal');} }
+            ['btn-spd-pause', 'btn-spd-slow', 'btn-spd-norm', 'btn-spd-fast', 'btn-spd-ultra'].forEach(id => { const el = document.getElementById(id); if (el) { el.classList.remove('active', 'nominal'); } });
+            const m2 = { 0: 'btn-spd-pause', 0.3: 'btn-spd-slow', 1: 'btn-spd-norm', 3: 'btn-spd-fast', 8: 'btn-spd-ultra' };
+            const aid = m2[mult]; if (aid) { const el = document.getElementById(aid); if (el) { el.classList.add('active'); if (mult > 0) el.classList.add('nominal'); } }
             const d = document.getElementById('spd-display');
-            if (d) {d.textContent = mult === 0 ? '⏸ PAUSED' : mult.toFixed(1) + '× SPD'; d.style.color = mult === 0 ? 'var(--muted)' : mult >= 8 ? 'var(--orange)' : 'var(--cyan)';}
+            if (d) { d.textContent = mult === 0 ? '⏸ PAUSED' : mult.toFixed(1) + '× SPD'; d.style.color = mult === 0 ? 'var(--muted)' : mult >= 8 ? 'var(--orange)' : 'var(--cyan)'; }
         }
 
         // DETAIL PANEL
@@ -2641,7 +2698,7 @@
             const se = document.getElementById('acd-status'); se.className = `ac-detail-val status-${sc}`; se.textContent = ac.status.toUpperCase();
             set('acd-hops', ac.status === 'direct' ? '1 (GS direct)' : ac.status === 'relay' ? (ac.hopCount || 2) + ' hops' : 'LINKING...');
             set('acd-nexthop', ac.relayVia?.label || (ac.status === 'direct' ? '— GS' : 'AUTO-HEAL'));
-            let t = ac; let d = 0; while (t.relayVia && d < 8) {t = t.relayVia; d++;}
+            let t = ac; let d = 0; while (t.relayVia && d < 8) { t = t.relayVia; d++; }
             set('acd-gs', (t.gsConn?.name || ac.gsConn?.name || '—') + (ac.isLive ? ' [LIVE]' : ''));
             set('acd-pos', `${(ac.lat || 0).toFixed(4)}°N ${(ac.lon || 0).toFixed(4)}°E`);
             set('acd-hdg', (ac.hdg || 0).toFixed(0) + '°');
@@ -2650,9 +2707,9 @@
         }
         function showMainFlightDetail() {
             selectedAcId = 'MAIN';
-            showAcDetail({id: 'MAIN', label: 'AG-7423', lat: tmFlightLat, lon: tmFlightLon, hdg: 32, speed: state.speed, alt: state.altitude, status: 'direct', gsConn: {name: 'GS-BOM'}, hopCount: 1, relayVia: null, isLive: false});
+            showAcDetail({ id: 'MAIN', label: 'AG-7423', lat: tmFlightLat, lon: tmFlightLon, hdg: 32, speed: state.speed, alt: state.altitude, status: 'direct', gsConn: { name: 'GS-BOM' }, hopCount: 1, relayVia: null, isLive: false });
         }
-        function closeAcDetail() {document.getElementById('ac-detail-panel').classList.remove('visible'); selectedAcId = null;}
+        function closeAcDetail() { document.getElementById('ac-detail-panel').classList.remove('visible'); selectedAcId = null; }
 
         // ═══════════════════════════════════════════════════════════════
         // ═══════════════════════════════════════════════════════════════
@@ -2680,24 +2737,24 @@
         // LIVE GROUND STATION BACKEND FEED  (replaces separate localhost:8080 page)
         // Polls /api/log on the running Python GS HTTP server
         // ═══════════════════════════════════════════════════════════════
-        let lfBaseUrl = 'http://localhost:8080';
+        let lfBaseUrl = 'http://127.0.0.1:8000';
         let lfLastCount = 0;
         let lfPollTimer = null;
         let lfConnected = false;
         const lfAircraft = {};
-        const lfCounts = {TELEMETRY: 0, MESSAGE: 0, EMERGENCY: 0, HEARTBEAT: 0};
+        const lfCounts = { TELEMETRY: 0, MESSAGE: 0, EMERGENCY: 0, HEARTBEAT: 0 };
 
         function lfSetStatus(connected, msg) {
             lfConnected = connected;
             const dot = document.getElementById('lf-conn-dot');
             const txt = document.getElementById('lf-status-text');
             const badge = document.getElementById('tab-live');
-            if (dot) {dot.className = connected ? 'connected' : 'disconnected';}
+            if (dot) { dot.className = connected ? 'connected' : 'disconnected'; }
             if (txt) txt.textContent = msg;
         }
 
         function lfTypeIcon(t) {
-            return {TELEMETRY: '📡', MESSAGE: '📨', EMERGENCY: '🚨', HEARTBEAT: '♥', ACK: '✔'}[t] || '📦';
+            return { TELEMETRY: '📡', MESSAGE: '📨', EMERGENCY: '🚨', HEARTBEAT: '♥', ACK: '✔' }[t] || '📦';
         }
 
         function lfRenderPacket(p) {
@@ -2786,7 +2843,7 @@
                 lfCounts.MESSAGE = data.filter(p => p.type === 'MESSAGE').length;
                 lfCounts.EMERGENCY = data.filter(p => p.type === 'EMERGENCY').length;
                 lfCounts.HEARTBEAT = data.filter(p => p.type === 'HEARTBEAT').length;
-                const s = (id, v) => {const el = document.getElementById(id); if (el) el.textContent = v;};
+                const s = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
                 s('lf-cnt-telem', lfCounts.TELEMETRY);
                 s('lf-cnt-msg', lfCounts.MESSAGE);
                 s('lf-cnt-emerg', lfCounts.EMERGENCY);
@@ -2833,7 +2890,7 @@
 
                 // Active aircraft sidebar
                 data.forEach(p => {
-                    if (p.type === 'TELEMETRY' && p.payload) lfAircraft[p.src] = {...p.payload, _last: p.time};
+                    if (p.type === 'TELEMETRY' && p.payload) lfAircraft[p.src] = { ...p.payload, _last: p.time };
                 });
                 const acBar = document.getElementById('lf-ac-bar');
                 const acList = document.getElementById('lf-ac-list');
@@ -2889,20 +2946,20 @@
         // ═══════════════════════════════════════════════════════════════
         const tmCanvas = document.getElementById('telem-mesh-canvas');
         const tmCtx = tmCanvas.getContext('2d');
-        const TM_GS = [{name: 'GS-ALPHA', city: 'BOM', lat: 19.09, lon: 72.87, color: '#00ffb3'}, {name: 'GS-BETA', city: 'CHN', lat: 13.08, lon: 80.27, color: '#00c8ff'}, {name: 'GS-GAMMA', city: 'BPL', lat: 23.25, lon: 77.40, color: '#ffb300'}, {name: 'GS-DELTA', city: 'DEL', lat: 28.61, lon: 77.21, color: '#e040fb'}, {name: 'GS-EPS', city: 'CCU', lat: 22.57, lon: 88.36, color: '#ff6b35'}, {name: 'GS-ZETA', city: 'LHR', lat: 51.47, lon: -0.46, color: '#c0ff00'}];
-        const TM_RELAY = [{lat: 18.5, lon: 66.0}, {lat: 15.0, lon: 69.5}, {lat: 12.0, lon: 72.0}, {lat: 16.0, lon: 83.5}, {lat: 19.5, lon: 87.0}, {lat: 25.0, lon: 82.0}, {lat: 20.5, lon: 73.5}, {lat: 24.0, lon: 76.5}, {lat: 27.0, lon: 77.8}];
+        const TM_GS = [{ name: 'GS-ALPHA', city: 'BOM', lat: 19.09, lon: 72.87, color: '#00ffb3' }, { name: 'GS-BETA', city: 'CHN', lat: 13.08, lon: 80.27, color: '#00c8ff' }, { name: 'GS-GAMMA', city: 'BPL', lat: 23.25, lon: 77.40, color: '#ffb300' }, { name: 'GS-DELTA', city: 'DEL', lat: 28.61, lon: 77.21, color: '#e040fb' }, { name: 'GS-EPS', city: 'CCU', lat: 22.57, lon: 88.36, color: '#ff6b35' }, { name: 'GS-ZETA', city: 'LHR', lat: 51.47, lon: -0.46, color: '#c0ff00' }];
+        const TM_RELAY = [{ lat: 18.5, lon: 66.0 }, { lat: 15.0, lon: 69.5 }, { lat: 12.0, lon: 72.0 }, { lat: 16.0, lon: 83.5 }, { lat: 19.5, lon: 87.0 }, { lat: 25.0, lon: 82.0 }, { lat: 20.5, lon: 73.5 }, { lat: 24.0, lon: 76.5 }, { lat: 27.0, lon: 77.8 }];
         const TM_LAT_MIN = 8.0, TM_LAT_MAX = 55.0, TM_LON_MIN = -5.0, TM_LON_MAX = 92.0;
         const TM_GS_RANGE = 3.5, TM_RELAY_RANGE = 2.0;
         let tmFlightLat = 19.09, tmFlightLon = 72.87, tmDistress = false, tmPacketT = 0;
-        function tmProject(lat, lon) {const W = tmCanvas.width, H = tmCanvas.height; return {x: ((lon - TM_LON_MIN) / (TM_LON_MAX - TM_LON_MIN)) * (W - 30) + 15, y: ((TM_LAT_MAX - lat) / (TM_LAT_MAX - TM_LAT_MIN)) * (H - 26) + 12};}
-        function tmGeoDist(a, b) {const dl = a.lat - b.lat, dn = a.lon - b.lon; return Math.sqrt(dl * dl + dn * dn * 0.75);}
-        function tmGetConnectivity(fLat, fLon) {const f = {lat: fLat, lon: fLon}; return TM_GS.map(gs => {const d = tmGeoDist(f, gs); if (d <= TM_GS_RANGE) return {type: 'direct', via: null}; const relay = TM_RELAY.find(r => tmGeoDist(f, r) <= TM_RELAY_RANGE && tmGeoDist(r, gs) <= TM_GS_RANGE); if (relay) return {type: 'relay', via: relay}; return {type: 'none', via: null};});}
+        function tmProject(lat, lon) { const W = tmCanvas.width, H = tmCanvas.height; return { x: ((lon - TM_LON_MIN) / (TM_LON_MAX - TM_LON_MIN)) * (W - 30) + 15, y: ((TM_LAT_MAX - lat) / (TM_LAT_MAX - TM_LAT_MIN)) * (H - 26) + 12 }; }
+        function tmGeoDist(a, b) { const dl = a.lat - b.lat, dn = a.lon - b.lon; return Math.sqrt(dl * dl + dn * dn * 0.75); }
+        function tmGetConnectivity(fLat, fLon) { const f = { lat: fLat, lon: fLon }; return TM_GS.map(gs => { const d = tmGeoDist(f, gs); if (d <= TM_GS_RANGE) return { type: 'direct', via: null }; const relay = TM_RELAY.find(r => tmGeoDist(f, r) <= TM_RELAY_RANGE && tmGeoDist(r, gs) <= TM_GS_RANGE); if (relay) return { type: 'relay', via: relay }; return { type: 'none', via: null }; }); }
         function tmDraw() {
             const W = tmCanvas.width = tmCanvas.offsetWidth; const H = tmCanvas.height = tmCanvas.offsetHeight;
             tmCtx.clearRect(0, 0, W, H);
             tmCtx.strokeStyle = 'rgba(0,200,255,0.04)'; tmCtx.lineWidth = 1;
-            for (let x = 0; x < W; x += 24) {tmCtx.beginPath(); tmCtx.moveTo(x, 0); tmCtx.lineTo(x, H); tmCtx.stroke();}
-            for (let y = 0; y < H; y += 24) {tmCtx.beginPath(); tmCtx.moveTo(0, y); tmCtx.lineTo(W, y); tmCtx.stroke();}
+            for (let x = 0; x < W; x += 24) { tmCtx.beginPath(); tmCtx.moveTo(x, 0); tmCtx.lineTo(x, H); tmCtx.stroke(); }
+            for (let y = 0; y < H; y += 24) { tmCtx.beginPath(); tmCtx.moveTo(0, y); tmCtx.lineTo(W, y); tmCtx.stroke(); }
             const conn = tmGetConnectivity(tmFlightLat, tmFlightLon); const fp = tmProject(tmFlightLat, tmFlightLon);
             // Live ac dots
             mapMeshAcData.slice(0, 40).forEach(lac => {
@@ -2913,8 +2970,8 @@
             });
             TM_RELAY.forEach((r, ri) => {
                 const rp = tmProject(r.lat, r.lon); const isActive = conn.some(c => c.via === r);
-                TM_GS.forEach(gs => {const gp = tmProject(gs.lat, gs.lon); if (tmGeoDist(r, gs) <= TM_GS_RANGE * 1.2) {tmCtx.save(); tmCtx.setLineDash([3, 6]); tmCtx.strokeStyle = isActive ? 'rgba(255,157,0,0.3)' : 'rgba(50,80,120,0.2)'; tmCtx.lineWidth = 0.8; tmCtx.beginPath(); tmCtx.moveTo(rp.x, rp.y); tmCtx.lineTo(gp.x, gp.y); tmCtx.stroke(); tmCtx.setLineDash([]); tmCtx.restore();} });
-                tmCtx.save(); tmCtx.translate(rp.x, rp.y); tmCtx.fillStyle = isActive ? '#ff9d00' : 'rgba(70,100,140,0.5)'; if (isActive) {tmCtx.shadowBlur = 8; tmCtx.shadowColor = '#ff9d00';}
+                TM_GS.forEach(gs => { const gp = tmProject(gs.lat, gs.lon); if (tmGeoDist(r, gs) <= TM_GS_RANGE * 1.2) { tmCtx.save(); tmCtx.setLineDash([3, 6]); tmCtx.strokeStyle = isActive ? 'rgba(255,157,0,0.3)' : 'rgba(50,80,120,0.2)'; tmCtx.lineWidth = 0.8; tmCtx.beginPath(); tmCtx.moveTo(rp.x, rp.y); tmCtx.lineTo(gp.x, gp.y); tmCtx.stroke(); tmCtx.setLineDash([]); tmCtx.restore(); } });
+                tmCtx.save(); tmCtx.translate(rp.x, rp.y); tmCtx.fillStyle = isActive ? '#ff9d00' : 'rgba(70,100,140,0.5)'; if (isActive) { tmCtx.shadowBlur = 8; tmCtx.shadowColor = '#ff9d00'; }
                 tmCtx.beginPath(); tmCtx.moveTo(0, -4); tmCtx.lineTo(3, 2); tmCtx.lineTo(0, 1); tmCtx.lineTo(-3, 2); tmCtx.closePath(); tmCtx.fill(); tmCtx.restore();
             });
             TM_GS.forEach((gs, i) => {
@@ -2923,13 +2980,13 @@
                 const grd = tmCtx.createRadialGradient(gp.x, gp.y, 0, gp.x, gp.y, rangeR);
                 grd.addColorStop(0, gs.color + '12'); grd.addColorStop(1, 'transparent');
                 tmCtx.fillStyle = grd; tmCtx.beginPath(); tmCtx.arc(gp.x, gp.y, rangeR, 0, Math.PI * 2); tmCtx.fill();
-                if (c.type === 'direct') {tmCtx.save(); tmCtx.strokeStyle = tmDistress ? '#ff2244' : gs.color; tmCtx.lineWidth = 1.5; tmCtx.globalAlpha = 0.75; tmCtx.shadowBlur = 8; tmCtx.shadowColor = tmDistress ? '#ff2244' : gs.color; tmCtx.beginPath(); tmCtx.moveTo(gp.x, gp.y); tmCtx.lineTo(fp.x, fp.y); tmCtx.stroke(); tmCtx.restore();}
-                else if (c.type === 'relay' && c.via) {const rp = tmProject(c.via.lat, c.via.lon); tmCtx.save(); tmCtx.setLineDash([5, 4]); tmCtx.strokeStyle = '#ff9d00'; tmCtx.lineWidth = 1.2; tmCtx.globalAlpha = 0.6; tmCtx.beginPath(); tmCtx.moveTo(gp.x, gp.y); tmCtx.lineTo(rp.x, rp.y); tmCtx.stroke(); tmCtx.beginPath(); tmCtx.moveTo(rp.x, rp.y); tmCtx.lineTo(fp.x, fp.y); tmCtx.stroke(); tmCtx.setLineDash([]); tmCtx.restore();}
-                if (c.type !== 'none') {const t = (tmPacketT + i * 0.25) % 1; let px, py; if (c.type === 'direct') {px = gp.x + (fp.x - gp.x) * t; py = gp.y + (fp.y - gp.y) * t;} else if (c.via) {const rp = tmProject(c.via.lat, c.via.lon); if (t < 0.5) {const tt = t * 2; px = gp.x + (rp.x - gp.x) * tt; py = gp.y + (rp.y - gp.y) * tt;} else {const tt = (t - 0.5) * 2; px = rp.x + (fp.x - rp.x) * tt; py = rp.y + (fp.y - rp.y) * tt;} } if (px !== undefined) {const pc = c.type === 'direct' ? gs.color : '#ff9d00'; tmCtx.save(); tmCtx.shadowBlur = 10; tmCtx.shadowColor = pc; tmCtx.fillStyle = pc; tmCtx.beginPath(); tmCtx.arc(px, py, 2.5, 0, Math.PI * 2); tmCtx.fill(); tmCtx.restore();} }
+                if (c.type === 'direct') { tmCtx.save(); tmCtx.strokeStyle = tmDistress ? '#ff2244' : gs.color; tmCtx.lineWidth = 1.5; tmCtx.globalAlpha = 0.75; tmCtx.shadowBlur = 8; tmCtx.shadowColor = tmDistress ? '#ff2244' : gs.color; tmCtx.beginPath(); tmCtx.moveTo(gp.x, gp.y); tmCtx.lineTo(fp.x, fp.y); tmCtx.stroke(); tmCtx.restore(); }
+                else if (c.type === 'relay' && c.via) { const rp = tmProject(c.via.lat, c.via.lon); tmCtx.save(); tmCtx.setLineDash([5, 4]); tmCtx.strokeStyle = '#ff9d00'; tmCtx.lineWidth = 1.2; tmCtx.globalAlpha = 0.6; tmCtx.beginPath(); tmCtx.moveTo(gp.x, gp.y); tmCtx.lineTo(rp.x, rp.y); tmCtx.stroke(); tmCtx.beginPath(); tmCtx.moveTo(rp.x, rp.y); tmCtx.lineTo(fp.x, fp.y); tmCtx.stroke(); tmCtx.setLineDash([]); tmCtx.restore(); }
+                if (c.type !== 'none') { const t = (tmPacketT + i * 0.25) % 1; let px, py; if (c.type === 'direct') { px = gp.x + (fp.x - gp.x) * t; py = gp.y + (fp.y - gp.y) * t; } else if (c.via) { const rp = tmProject(c.via.lat, c.via.lon); if (t < 0.5) { const tt = t * 2; px = gp.x + (rp.x - gp.x) * tt; py = gp.y + (rp.y - gp.y) * tt; } else { const tt = (t - 0.5) * 2; px = rp.x + (fp.x - rp.x) * tt; py = rp.y + (fp.y - rp.y) * tt; } } if (px !== undefined) { const pc = c.type === 'direct' ? gs.color : '#ff9d00'; tmCtx.save(); tmCtx.shadowBlur = 10; tmCtx.shadowColor = pc; tmCtx.fillStyle = pc; tmCtx.beginPath(); tmCtx.arc(px, py, 2.5, 0, Math.PI * 2); tmCtx.fill(); tmCtx.restore(); } }
                 const pulse = ((Date.now() / 1000 + i * 0.25) % 1); tmCtx.save(); tmCtx.beginPath(); tmCtx.arc(gp.x, gp.y, 5 + pulse * 10, 0, Math.PI * 2); tmCtx.strokeStyle = gs.color; tmCtx.globalAlpha = 0.5 * (1 - pulse); tmCtx.lineWidth = 1; tmCtx.stroke(); tmCtx.restore();
                 tmCtx.save(); tmCtx.shadowBlur = 12; tmCtx.shadowColor = gs.color; tmCtx.fillStyle = gs.color; tmCtx.beginPath(); tmCtx.arc(gp.x, gp.y, 5, 0, Math.PI * 2); tmCtx.fill(); tmCtx.fillStyle = '#060d1a'; tmCtx.beginPath(); tmCtx.arc(gp.x, gp.y, 2.5, 0, Math.PI * 2); tmCtx.fill(); tmCtx.fillStyle = gs.color; tmCtx.font = '6px Share Tech Mono'; tmCtx.textAlign = 'center'; tmCtx.fillText(gs.city, gp.x, gp.y + 12); tmCtx.restore();
                 const le = document.getElementById(`gs-link-${i}`), it = document.getElementById(`gs-item-${i}`);
-                if (le && it) {le.className = `gs-link-badge gs-link-${c.type}`; le.textContent = c.type === 'direct' ? 'DIRECT' : c.type === 'relay' ? 'RELAY' : 'NO LINK'; it.style.borderColor = c.type === 'direct' ? gs.color + '55' : c.type === 'relay' ? 'rgba(255,157,0,0.35)' : 'var(--border)';}
+                if (le && it) { le.className = `gs-link-badge gs-link-${c.type}`; le.textContent = c.type === 'direct' ? 'DIRECT' : c.type === 'relay' ? 'RELAY' : 'NO LINK'; it.style.borderColor = c.type === 'direct' ? gs.color + '55' : c.type === 'relay' ? 'rgba(255,157,0,0.35)' : 'var(--border)'; }
             });
             const fCol = tmDistress ? '#ff2244' : '#00e5ff'; tmCtx.save(); tmCtx.translate(fp.x, fp.y); tmCtx.shadowBlur = 16; tmCtx.shadowColor = fCol; tmCtx.fillStyle = fCol; tmCtx.beginPath(); tmCtx.moveTo(0, -7); tmCtx.lineTo(4, 4); tmCtx.lineTo(0, 2); tmCtx.lineTo(-4, 4); tmCtx.closePath(); tmCtx.fill(); tmCtx.font = '6px Share Tech Mono'; tmCtx.textAlign = 'center'; tmCtx.fillText('AG7423', 0, -11); tmCtx.restore();
             tmPacketT = (tmPacketT + 0.008) % 1;
@@ -3089,14 +3146,14 @@
                     agyRecognition.interimResults = false;
                     agyRecognition.maxAlternatives = 1;
 
-                    agyRecognition.onstart = function() {
+                    agyRecognition.onstart = function () {
                         agyRecognitionRunning = true;
                         if (agySessionActive && agyVoiceState !== 'processing' && agyVoiceState !== 'speaking') {
                             setAgyVoiceState('listening');
                         }
                     };
 
-                    agyRecognition.onresult = function(event) {
+                    agyRecognition.onresult = function (event) {
                         if (!event.results || event.results.length === 0) return;
                         const transcript = event.results[0][0].transcript.trim();
                         if (!transcript) return;
@@ -3106,7 +3163,7 @@
                         queryAgyBackend(transcript);
                     };
 
-                    agyRecognition.onerror = function(event) {
+                    agyRecognition.onerror = function (event) {
                         console.warn('[VOICE] Speech recognition event:', event.error);
                         if (event.error === 'no-speech') {
                             // Silence: NORMAL in persistent mode, do NOT terminate session
@@ -3128,7 +3185,7 @@
                         }
                     };
 
-                    agyRecognition.onend = function() {
+                    agyRecognition.onend = function () {
                         agyRecognitionRunning = false;
                         // CRITICAL: Automatically resume listening if session is still active!
                         if (agySessionActive && agyVoiceState === 'listening') {
@@ -3170,7 +3227,7 @@
                 try {
                     agyRecognitionRunning = false;
                     agyRecognition.abort();
-                } catch (e) {}
+                } catch (e) { }
             }
         }
 
