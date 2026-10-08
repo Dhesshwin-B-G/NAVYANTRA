@@ -1329,6 +1329,12 @@
             transition: border-color 0.25s, box-shadow 0.25s;
         }
 
+        #agy-voice-hud.idle,
+        #agy-voice-hud.offline {
+            border-left-color: var(--muted);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
         #agy-voice-hud.listening {
             border-left-color: var(--cyan);
             box-shadow: 0 0 16px rgba(0, 212, 255, 0.35);
@@ -1342,6 +1348,11 @@
         #agy-voice-hud.speaking {
             border-left-color: var(--green);
             box-shadow: 0 0 16px rgba(0, 255, 157, 0.35);
+        }
+
+        #agy-voice-hud.stopping {
+            border-left-color: var(--orange);
+            box-shadow: 0 0 14px rgba(255, 107, 0, 0.3);
         }
 
         #agy-voice-hud.error {
@@ -1393,12 +1404,47 @@
             border-color: var(--cyan);
             box-shadow: 0 0 14px var(--cyan);
             animation: agy-pulse 1.3s infinite ease-in-out;
+            color: var(--cyan);
+        }
+
+        #agy-mic-btn.processing {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--yellow);
+            box-shadow: 0 0 14px rgba(255, 215, 0, 0.5);
+            color: var(--yellow);
+            animation: agy-pulse-yellow 1.1s infinite ease-in-out;
+        }
+
+        #agy-mic-btn.speaking {
+            background: rgba(0, 255, 157, 0.2);
+            border-color: var(--green);
+            box-shadow: 0 0 14px rgba(0, 255, 157, 0.5);
+            color: var(--green);
+            animation: agy-pulse-green 1.2s infinite ease-in-out;
+        }
+
+        #agy-mic-btn.stopping {
+            background: rgba(255, 107, 0, 0.2);
+            border-color: var(--orange);
+            color: var(--orange);
         }
 
         @keyframes agy-pulse {
             0% { box-shadow: 0 0 4px var(--cyan); }
             50% { box-shadow: 0 0 18px var(--cyan); }
             100% { box-shadow: 0 0 4px var(--cyan); }
+        }
+
+        @keyframes agy-pulse-green {
+            0% { box-shadow: 0 0 4px var(--green); }
+            50% { box-shadow: 0 0 18px var(--green); }
+            100% { box-shadow: 0 0 4px var(--green); }
+        }
+
+        @keyframes agy-pulse-yellow {
+            0% { box-shadow: 0 0 4px var(--yellow); }
+            50% { box-shadow: 0 0 16px var(--yellow); }
+            100% { box-shadow: 0 0 4px var(--yellow); }
         }
 
         .agy-hud-title-wrap {
@@ -1432,10 +1478,12 @@
             color: var(--muted);
         }
 
-        #agy-status-chip.idle { color: var(--muted); border-color: var(--border); }
+        #agy-status-chip.idle,
+        #agy-status-chip.offline { color: var(--muted); border-color: var(--border); background: var(--panel); }
         #agy-status-chip.listening { color: var(--cyan); border-color: var(--cyan); background: rgba(0,212,255,0.1); }
         #agy-status-chip.processing { color: var(--yellow); border-color: var(--yellow); background: rgba(255,215,0,0.1); }
         #agy-status-chip.speaking { color: var(--green); border-color: var(--green); background: rgba(0,255,157,0.1); }
+        #agy-status-chip.stopping { color: var(--orange); border-color: var(--orange); background: rgba(255,107,0,0.1); }
         #agy-status-chip.error { color: var(--red); border-color: var(--red); background: rgba(255,34,68,0.1); }
 
         .agy-hud-body {
@@ -1645,16 +1693,16 @@
             <div class="map-overlay" id="map-overlay">GLOBAL RADAR ACTIVE — TRACKING WORLDWIDE</div>
 
             <!-- ── AGY VOICE HUD ── -->
-            <div id="agy-voice-hud" class="idle">
+            <div id="agy-voice-hud" class="offline">
                 <div class="agy-hud-header">
-                    <button id="agy-mic-btn" class="idle" title="Click to speak with AGY" onclick="startAgyVoice()">
+                    <button id="agy-mic-btn" class="offline" title="Click to start persistent voice session" onclick="startAgyVoice()">
                         <span id="agy-mic-icon">🎙</span>
                     </button>
                     <div class="agy-hud-title-wrap">
                         <div class="agy-hud-title">🎙 AGY VOICE ASSISTANT</div>
                         <div class="agy-hud-sub">TACTICAL GROUND CONTROL</div>
                     </div>
-                    <div id="agy-status-chip" class="idle">IDLE</div>
+                    <div id="agy-status-chip" class="offline">OFFLINE</div>
                 </div>
                 <div class="agy-hud-body">
                     <div class="agy-line">
@@ -2943,11 +2991,18 @@
             setTimeout(() => tmDraw(), 250);
         })();
 
-        // ── AGY VOICE AGENT INTEGRATION ──
+        // ── AGY VOICE AGENT INTEGRATION (PERSISTENT VOICE SESSION) ──
         const VOICE_BACKEND_URL = 'http://localhost:8001/voice/query';
-        let agyVoiceState = 'idle'; // idle | listening | processing | speaking | error
+        const VOICE_SESSION_START_URL = 'http://localhost:8001/voice/session/start';
+        const VOICE_SESSION_STOP_URL = 'http://localhost:8001/voice/session/stop';
+
+        // State Machine States: 'offline' | 'listening' | 'processing' | 'speaking' | 'stopping' | 'error'
+        let agyVoiceState = 'offline';
+        let agySessionActive = false;
         let agyActiveAudio = null;
         let agyRecognition = null;
+        let agyRecognitionRunning = false;
+        let agyRestartTimeout = null;
         let agyErrorTimeout = null;
 
         function setAgyVoiceState(state, message = null) {
@@ -2956,6 +3011,7 @@
             const btn = document.getElementById('agy-mic-btn');
             const chip = document.getElementById('agy-status-chip');
             const tbStatus = document.getElementById('tb-mic-status');
+            const micIcon = document.getElementById('agy-mic-icon');
 
             if (!hud || !btn || !chip) return;
 
@@ -2964,19 +3020,41 @@
             btn.className = state;
             chip.className = state;
             chip.textContent = state.toUpperCase();
-            if (tbStatus) tbStatus.textContent = state === 'idle' ? 'AGY' : state.toUpperCase();
+            if (tbStatus) tbStatus.textContent = state === 'offline' ? 'OFFLINE' : state.toUpperCase();
 
-            if (state === 'idle') {
+            // Icon and button interactive controls
+            if (state === 'offline') {
                 btn.disabled = false;
+                btn.title = "Click to start persistent voice session";
+                if (micIcon) micIcon.textContent = "🎙";
             } else if (state === 'listening') {
                 btn.disabled = false;
-            } else if (state === 'processing' || state === 'speaking') {
+                btn.title = "Voice session active — click to stop";
+                if (micIcon) micIcon.textContent = "🎙";
+            } else if (state === 'processing') {
+                btn.disabled = false;
+                btn.title = "Processing request — click to cancel";
+                if (micIcon) micIcon.textContent = "🤔";
+            } else if (state === 'speaking') {
+                btn.disabled = false;
+                btn.title = "Assistant speaking — click to interrupt & stop";
+                if (micIcon) micIcon.textContent = "🔊";
+            } else if (state === 'stopping') {
                 btn.disabled = true;
+                btn.title = "Stopping session...";
+                if (micIcon) micIcon.textContent = "⏹";
             } else if (state === 'error') {
-                btn.disabled = true;
+                btn.disabled = false;
+                btn.title = "Voice error — click to retry";
+                if (micIcon) micIcon.textContent = "⚠️";
                 if (agyErrorTimeout) clearTimeout(agyErrorTimeout);
                 agyErrorTimeout = setTimeout(() => {
-                    setAgyVoiceState('idle');
+                    if (agySessionActive) {
+                        setAgyVoiceState('listening');
+                        startRecognition();
+                    } else {
+                        setAgyVoiceState('offline');
+                    }
                 }, 3500);
             }
         }
@@ -2991,16 +3069,10 @@
             if (el) el.textContent = text || '—';
         }
 
-        function startAgyVoice() {
-            // Prevent multiple simultaneous clicks
-            if (agyVoiceState !== 'idle') {
-                if (agyVoiceState === 'speaking' && agyActiveAudio) {
-                    agyActiveAudio.pause();
-                    agyActiveAudio = null;
-                    setAgyVoiceState('idle');
-                }
-                return;
-            }
+        // Initialize / Start speech recognition engine
+        function startRecognition() {
+            if (!agySessionActive) return;
+            if (agyVoiceState === 'speaking' || agyVoiceState === 'processing') return;
 
             const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRec) {
@@ -3009,52 +3081,164 @@
                 return;
             }
 
-            try {
-                if (agyRecognition) {
-                    try { agyRecognition.abort(); } catch(e) {}
-                }
-                agyRecognition = new SpeechRec();
-                agyRecognition.lang = 'en-US';
-                agyRecognition.interimResults = false;
-                agyRecognition.maxAlternatives = 1;
+            if (!agyRecognition) {
+                try {
+                    agyRecognition = new SpeechRec();
+                    agyRecognition.lang = 'en-US';
+                    agyRecognition.continuous = false; // per-utterance turn for responsive query processing
+                    agyRecognition.interimResults = false;
+                    agyRecognition.maxAlternatives = 1;
 
-                setAgyVoiceState('listening');
-                showAgyUser('Listening... speak now');
-                showAgyResponse('—');
+                    agyRecognition.onstart = function() {
+                        agyRecognitionRunning = true;
+                        if (agySessionActive && agyVoiceState !== 'processing' && agyVoiceState !== 'speaking') {
+                            setAgyVoiceState('listening');
+                        }
+                    };
 
-                agyRecognition.onresult = function(event) {
-                    const transcript = event.results[0][0].transcript;
-                    showAgyUser(transcript);
-                    queryAgyBackend(transcript);
-                };
+                    agyRecognition.onresult = function(event) {
+                        if (!event.results || event.results.length === 0) return;
+                        const transcript = event.results[0][0].transcript.trim();
+                        if (!transcript) return;
 
-                agyRecognition.onerror = function(event) {
-                    console.warn('[VOICE] Speech recognition error:', event.error);
+                        console.log('[VOICE] Speech detected:', transcript);
+                        showAgyUser(transcript);
+                        queryAgyBackend(transcript);
+                    };
+
+                    agyRecognition.onerror = function(event) {
+                        console.warn('[VOICE] Speech recognition event:', event.error);
+                        if (event.error === 'no-speech') {
+                            // Silence: NORMAL in persistent mode, do NOT terminate session
+                            return;
+                        }
+                        if (event.error === 'aborted') {
+                            // Intentionally aborted (e.g. while speaking TTS)
+                            return;
+                        }
+                        if (event.error === 'not-allowed') {
+                            agySessionActive = false;
+                            setAgyVoiceState('error');
+                            showAgyResponse('Microphone access denied. Please allow microphone in browser permissions.');
+                            return;
+                        }
+                        // Other recoverable errors: stay active
+                        if (agySessionActive && agyVoiceState === 'listening') {
+                            scheduleRestartRecognition(400);
+                        }
+                    };
+
+                    agyRecognition.onend = function() {
+                        agyRecognitionRunning = false;
+                        // CRITICAL: Automatically resume listening if session is still active!
+                        if (agySessionActive && agyVoiceState === 'listening') {
+                            scheduleRestartRecognition(150);
+                        }
+                    };
+                } catch (e) {
+                    console.error('[VOICE] Speech recognition instantiation error:', e);
                     setAgyVoiceState('error');
-                    if (event.error === 'not-allowed') {
-                        showAgyResponse('Microphone access denied. Please allow microphone in browser permissions.');
-                    } else if (event.error === 'no-speech') {
-                        showAgyResponse('No speech detected. Please click mic and try again.');
-                    } else {
-                        showAgyResponse('Voice recognition error: ' + event.error);
-                    }
-                };
+                    return;
+                }
+            }
 
-                agyRecognition.onend = function() {
-                    if (agyVoiceState === 'listening') {
-                        setAgyVoiceState('idle');
+            if (!agyRecognitionRunning) {
+                try {
+                    agyRecognitionRunning = true;
+                    agyRecognition.start();
+                } catch (err) {
+                    agyRecognitionRunning = false;
+                    if (err.name !== 'InvalidStateError') {
+                        console.warn('[VOICE] Speech recognition start error:', err);
                     }
-                };
-
-                agyRecognition.start();
-            } catch (err) {
-                console.error('[VOICE] Recognition start error:', err);
-                setAgyVoiceState('error');
-                showAgyResponse('Failed to initialize microphone: ' + err.message);
+                }
             }
         }
 
+        function scheduleRestartRecognition(delayMs = 150) {
+            if (agyRestartTimeout) clearTimeout(agyRestartTimeout);
+            agyRestartTimeout = setTimeout(() => {
+                if (agySessionActive && agyVoiceState === 'listening') {
+                    startRecognition();
+                }
+            }, delayMs);
+        }
+
+        function stopRecognition() {
+            if (agyRestartTimeout) clearTimeout(agyRestartTimeout);
+            if (agyRecognition) {
+                try {
+                    agyRecognitionRunning = false;
+                    agyRecognition.abort();
+                } catch (e) {}
+            }
+        }
+
+        // Toggle or start voice session
+        function toggleAgyVoiceSession() {
+            if (!agySessionActive) {
+                // START SESSION
+                startVoiceSession();
+            } else {
+                // STOP SESSION
+                stopVoiceSession();
+            }
+        }
+
+        // Backward compatibility alias
+        function startAgyVoice() {
+            toggleAgyVoiceSession();
+        }
+
+        function startVoiceSession() {
+            console.log('[VOICE] Starting persistent voice session...');
+            agySessionActive = true;
+            setAgyVoiceState('listening');
+            showAgyUser('Listening... speak now');
+            showAgyResponse('—');
+
+            // Notify backend
+            fetch(VOICE_SESSION_START_URL, { method: 'POST' }).catch(err => {
+                console.warn('[VOICE] Could not notify backend of session start:', err);
+            });
+
+            startRecognition();
+        }
+
+        function stopVoiceSession() {
+            console.log('[VOICE] Stopping persistent voice session...');
+            agySessionActive = false;
+            setAgyVoiceState('stopping');
+
+            // Stop audio playback immediately if running
+            if (agyActiveAudio) {
+                agyActiveAudio.pause();
+                agyActiveAudio = null;
+            }
+
+            // Stop speech recognition
+            stopRecognition();
+
+            // Notify backend
+            fetch(VOICE_SESSION_STOP_URL, { method: 'POST' }).catch(err => {
+                console.warn('[VOICE] Could not notify backend of session stop:', err);
+            });
+
+            setTimeout(() => {
+                setAgyVoiceState('offline');
+                showAgyUser('—');
+                showAgyResponse('Voice session offline.');
+            }, 600);
+        }
+
         async function queryAgyBackend(questionText) {
+            console.log("[VOICE] STT COMPLETE:", questionText);
+            console.log("[VOICE] CALLING AGY:", VOICE_BACKEND_URL);
+            const payload = { text: questionText };
+            console.log("[VOICE] AGY REQUEST:", payload);
+
+            // Suppress microphone while processing & speaking
+            stopRecognition();
             setAgyVoiceState('processing');
             showAgyResponse('Contacting AGY...');
 
@@ -3062,48 +3246,126 @@
                 const res = await fetch(VOICE_BACKEND_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: questionText }),
-                    signal: AbortSignal.timeout(12000)
+                    body: JSON.stringify(payload),
+                    signal: AbortSignal.timeout(10000)
                 });
 
+                console.log("[VOICE] AGY RESPONSE STATUS:", res.status);
                 if (!res.ok) {
                     const errJson = await res.json().catch(() => ({}));
                     throw new Error(errJson.detail || ('HTTP error ' + res.status));
                 }
 
                 const data = await res.json();
-                showAgyResponse(data.response);
+                console.log("[VOICE] AGY RESPONSE:", data);
 
+                // Case 1: Ignored background conversation / noise
+                if (data.intent === 'IGNORE') {
+                    console.log('[VOICE] Ignored background conversation:', questionText);
+                    showAgyResponse('—');
+                    if (agySessionActive) {
+                        setAgyVoiceState('listening');
+                        startRecognition();
+                    }
+                    return;
+                }
+
+                // Display answer
+                if (data.response) {
+                    showAgyResponse(data.response);
+                } else {
+                    showAgyResponse('—');
+                }
+
+                // Case 2: End-Session intent or explicit shutdown
+                if (data.intent === 'END_SESSION' || data.should_exit) {
+                    agySessionActive = false;
+                    setAgyVoiceState('stopping');
+
+                    if (data.audio_base64) {
+                        const mime = data.mime_type || 'audio/wav';
+                        agyActiveAudio = new Audio(`data:${mime};base64,${data.audio_base64}`);
+                        agyActiveAudio.onended = () => {
+                            agyActiveAudio = null;
+                            setAgyVoiceState('offline');
+                        };
+                        agyActiveAudio.onerror = () => {
+                            agyActiveAudio = null;
+                            setAgyVoiceState('offline');
+                        };
+                        agyActiveAudio.play().catch(() => {
+                            setAgyVoiceState('offline');
+                        });
+                    } else {
+                        setTimeout(() => {
+                            setAgyVoiceState('offline');
+                        }, 2000);
+                    }
+                    return;
+                }
+
+                // Case 3: Normal Request -> Speak & Automatically Return to LISTENING
                 if (data.audio_base64) {
                     setAgyVoiceState('speaking');
                     const mime = data.mime_type || 'audio/wav';
                     agyActiveAudio = new Audio(`data:${mime};base64,${data.audio_base64}`);
+
                     agyActiveAudio.onended = () => {
+                        console.log('[VOICE] TTS playback completed -> returning to LISTENING');
                         agyActiveAudio = null;
-                        setAgyVoiceState('idle');
+                        if (agySessionActive) {
+                            setAgyVoiceState('listening');
+                            startRecognition();
+                        } else {
+                            setAgyVoiceState('offline');
+                        }
                     };
+
                     agyActiveAudio.onerror = (e) => {
                         console.warn('[VOICE] Audio playback failed:', e);
                         agyActiveAudio = null;
-                        setAgyVoiceState('idle');
+                        if (agySessionActive) {
+                            setAgyVoiceState('listening');
+                            startRecognition();
+                        } else {
+                            setAgyVoiceState('offline');
+                        }
                     };
+
                     agyActiveAudio.play().catch(err => {
                         console.warn('[VOICE] Autoplay prevented or failed:', err);
-                        setAgyVoiceState('idle');
+                        if (agySessionActive) {
+                            setAgyVoiceState('listening');
+                            startRecognition();
+                        } else {
+                            setAgyVoiceState('offline');
+                        }
                     });
                 } else {
-                    // No TTS audio data (e.g. offline Cartesia), show response and return to idle
+                    // No TTS audio data (e.g. offline Cartesia) -> Brief pause then return to listening
                     setTimeout(() => {
-                        setAgyVoiceState('idle');
-                    }, 4000);
+                        if (agySessionActive) {
+                            setAgyVoiceState('listening');
+                            startRecognition();
+                        } else {
+                            setAgyVoiceState('offline');
+                        }
+                    }, 2500);
                 }
             } catch (err) {
                 console.error('[VOICE] Backend query error:', err);
-                setAgyVoiceState('error');
-                if (err.name === 'TimeoutError') {
-                    showAgyResponse('Voice backend timed out.');
+                showAgyResponse('AGY could not process the request.');
+
+                // Error recovery: keep session alive if active and return to listening
+                if (agySessionActive) {
+                    setTimeout(() => {
+                        if (agySessionActive) {
+                            setAgyVoiceState('listening');
+                            startRecognition();
+                        }
+                    }, 1500);
                 } else {
-                    showAgyResponse('Voice backend unavailable. Ensure voice bridge is running on port 8001.');
+                    setAgyVoiceState('error');
                 }
             }
         }

@@ -94,10 +94,13 @@ class OpenAICompatibleLLMClient(BaseLLMClient):
             payload["tools"] = tools
             payload["tool_choice"] = "auto"
 
-        # Log without exposing API key
-        logger.debug(f"[LLM] POST {url} (model={self.model})")
+        print(f"[LLM] Model: {self.model}")
+        print(f"[LLM] Request started to {self.base_url}/chat/completions")
+        logger.info(f"[LLM] Model: {self.model}, request started to {self.base_url}/chat/completions")
         try:
             resp = self._client.post(url, headers=headers, json=payload)
+            print(f"[LLM] Response status: {resp.status_code}")
+            logger.info(f"[LLM] Response status: {resp.status_code}")
             resp.raise_for_status()
             data = resp.json()
 
@@ -117,6 +120,8 @@ class OpenAICompatibleLLMClient(BaseLLMClient):
                         fn_args = {}
                     tool_calls.append(ToolCall(id=tc.get("id", "call_1"), name=fn_name, arguments=fn_args))
 
+            print(f"[LLM] Response received: {len(content) if content else 0} chars, {len(tool_calls)} tool calls")
+            logger.info(f"[LLM] Response received: {len(content) if content else 0} chars, {len(tool_calls)} tool calls")
             return LLMResponse(content=content, tool_calls=tool_calls)
 
         except httpx.HTTPStatusError as e:
@@ -268,6 +273,10 @@ class MockLLMClient(BaseLLMClient):
         # Exit / Shutdown
         if any(w in user_text for w in ["stop voice assistant", "shutdown", "quit", "exit"]):
             return LLMResponse(content="Shutting down AeroGuard voice assistant. Radar offline.")
+
+        # Networking query
+        if any(w in user_text for w in ["machine networking", "networking", "network"]):
+            return LLMResponse(content="Machine networking is the interconnection of devices and mesh nodes to reliably exchange telemetry and control data.")
 
         # General unknown
         return LLMResponse(content="I am standing by to assist with AeroGuard operations. Please state your command.")

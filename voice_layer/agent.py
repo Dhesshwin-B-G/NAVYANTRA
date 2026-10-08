@@ -204,7 +204,7 @@ class NodeTelemetryHandler(BaseCommandHandler):
         "temperature": [r"\btemp(erature)?\b"],
         "pressure": [r"\bpress(ure)?\b", r"\bbaro(meter)?\b"],
         "altitude": [r"\balt(itude)?\b", r"\bheight\b"],
-        "battery": [r"\bbatt(ery)?\b", r"\bpower\b"],
+        "battery": [r"\bbatt(ery)?\b", r"\bpower\b", r"\bvolt(age)?\b"],
         "speed": [r"\bspeed\b", r"\bvelocity\b"],
         "heading": [r"\bheading\b", r"\bbearing\b", r"\bdirection\b"],
         "pitch": [r"\bpitch\b"],
@@ -480,11 +480,17 @@ class AeroGuardAgent:
             {"role": "user", "content": clean},
         ]
 
+        print("[AGY] tool routing started")
+        logger.info("[AGY] tool routing started")
         tool_defs = self.tools.get_tool_definitions()
         print("[AGY] Processing query...")
         logger.info(f"[LLM] Processing query '{clean}' with {len(tool_defs)} tools available...")
 
+        print("[AGY] LLM request started")
+        logger.info(f"[AGY] LLM request started for query '{clean}'")
         resp = self.llm.generate_response(messages, tools=tool_defs)
+        print("[AGY] LLM response received")
+        logger.info("[AGY] LLM response received")
 
         # Handle tool calling loop if requested by LLM
         if resp.tool_calls:

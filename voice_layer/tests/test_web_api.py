@@ -170,3 +170,105 @@ def test_backend_offline_telemetry_handling():
     finally:
         svc.agent = orig_agent
         dead_client.close()
+
+
+def test_session_lifecycle_endpoints(client):
+    """Verify /voice/session/start, status, and stop endpoints."""
+    # Start session
+    res = client.post("/voice/session/start")
+    assert res.status_code == 200
+    assert res.json()["session_active"] is True
+    assert res.json()["state"] == "LISTENING"
+
+    # Status check
+    res_status = client.get("/voice/session/status")
+    assert res_status.status_code == 200
+    assert res_status.json()["session_active"] is True
+
+    # Stop session
+    res_stop = client.post("/voice/session/stop")
+    assert res_stop.status_code == 200
+    assert res_stop.json()["session_active"] is False
+    assert res_stop.json()["state"] == "OFFLINE"
+
+
+def test_persistent_multi_turn_conversation(client):
+    """Verify persistent voice session handles multiple queries without dropping offline."""
+    client.post("/voice/session/start")
+
+    # Turn 1
+    r1 = client.post("/voice/query", json={"text": "What is the battery level of AC001?"})
+    assert r1.status_code == 200
+    d1 = r1.json()
+    assert d1["intent"] == "NORMAL_REQUEST"
+    assert d1["session_active"] is True
+    assert d1["should_exit"] is False
+
+    # Turn 2
+    r2 = client.post("/voice/query", json={"text": "What is the altitude of AC001?"})
+    assert r2.status_code == 200
+    d2 = r2.json()
+    assert d2["intent"] == "NORMAL_REQUEST"
+    assert d2["session_active"] is True
+    assert d2["should_exit"] is False
+
+    # Turn 3: Background chatter ignored
+    r3 = client.post("/voice/query", json={"text": "Did you submit the assignment?"})
+    assert r3.status_code == 200
+    d3 = r3.json()
+    assert d3["intent"] == "IGNORE"
+    assert d3["response"] == ""
+    assert d3["session_active"] is True
+
+    # Turn 4: Thanks followed by question (must NOT terminate session)
+    r4 = client.post("/voice/query", json={"text": "Thank you, now tell me the battery voltage"})
+    assert r4.status_code == 200
+    d4 = r4.json()
+    assert d4["intent"] == "NORMAL_REQUEST"
+    assert d4["session_active"] is True
+
+    # Turn 5: Explicit farewell ends session
+    r5 = client.post("/voice/query", json={"text": "That's all"})
+    assert r5.status_code == 200
+    d5 = r5.json()
+    assert d5["intent"] == "END_SESSION"
+    assert d5["should_exit"] is True
+    assert d5["session_active"] is False
+
+
+def test_task8_exact_sequence(client):
+    """Verify exact requested debug sequence:
+    1. 'what is machine networking' -> general LLM answer, session alive
+    2. 'what is the battery status of Node 1' -> telemetry answer, session alive
+    3. 'that's all' -> session ends, OFFLINE
+    """
+    client.post("/voice/session/start")
+
+    # Turn 1: General question
+    r1 = client.post("/voice/query", json={"text": "what is machine networking"})
+    assert r1.status_code == 200
+    d1 = r1.json()
+    assert d1["intent"] == "NORMAL_REQUEST"
+    assert len(d1["response"]) > 0
+    assert d1["session_active"] is True
+    assert d1["should_exit"] is False
+
+    # Turn 2: Telemetry question
+    r2 = client.post("/voice/query", json={"text": "what is the battery status of Node 1"})
+    assert r2.status_code == 200
+    d2 = r2.json()
+    assert d2["intent"] == "NORMAL_REQUEST"
+    assert "battery" in d2["response"].lower() or "node 1" in d2["response"].lower() or "94" in d2["response"]
+    assert d2["session_active"] is True
+    assert d2["should_exit"] is False
+
+    # Turn 3: End session
+    r3 = client.post("/voice/query", json={"text": "that's all"})
+    assert r3.status_code == 200
+    d3 = r3.json()
+    assert d3["intent"] == "END_SESSION"
+    assert d3["should_exit"] is True
+    assert d3["session_active"] is False
+    assert d3["state"] == "OFFLINE"
+
+

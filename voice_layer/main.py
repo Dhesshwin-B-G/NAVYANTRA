@@ -147,6 +147,14 @@ def run_realtime_loop(
             time.sleep(1.0)
 
 
+from .session import (
+    VoiceIntent,
+    VoiceSessionManager,
+    VoiceState,
+    detect_voice_intent,
+)
+
+
 def run_continuous_voice_loop(
     config: VoiceConfig,
     audio: AudioManager,
@@ -154,28 +162,25 @@ def run_continuous_voice_loop(
     tts: CartesiaTTS,
     agent: AeroGuardAgent,
 ) -> None:
-    """Run continuous hands-free voice assistant loop.
+    """Run continuous hands-free voice assistant loop with persistent session state machine.
 
     Flow:
-        Microphone (VAD) -> Cartesia STT -> AGY / Groq -> AeroGuard Tools -> Ground Station /api/log
-        -> Telemetry Result -> Groq LLM -> Response -> Cartesia Sonic TTS -> Speaker -> Listen Again
+        Microphone (VAD) -> Cartesia STT -> Intent Gate (NORMAL_REQUEST / END_SESSION / IGNORE)
+        -> Agent / Tools -> Groq/LLM -> Cartesia Sonic TTS -> Speaker -> Automatically Return to LISTENING
     """
+    session = VoiceSessionManager()
+    session.start_session()
+
     print("\n" + "=" * 65)
     print("  AEROGUARD VOICE LAYER — CONTINUOUS VOICE ASSISTANT")
     print("=" * 65)
     print("Voice pipeline initialized.")
     print("Speak naturally to AeroGuard (e.g., 'What is the battery level of AC001?')")
-    print("Say 'quit', 'exit', 'shutdown', or press Ctrl+C to stop.")
+    print("Say 'quit', 'exit', 'shutdown', 'stop listening', or 'that's all' to end session.")
     print("=" * 65 + "\n")
 
-    listening_logged = False
-
-    while True:
+    while session.is_active():
         try:
-            if not listening_logged:
-                print("[VOICE] Listening... (speak to AeroGuard)")
-                listening_logged = True
-
             pcm_data = audio.record_speech(
                 energy_threshold=320.0,
                 silence_timeout=0.9,
@@ -183,54 +188,76 @@ def run_continuous_voice_loop(
                 poll_timeout=2.0,
             )
 
+            # Silence: wait for next utterance, do NOT terminate session
             if not pcm_data or len(pcm_data) < int(audio.default_sample_rate * 2 * 0.4):
-                # No speech detected during poll window; loop quietly
                 continue
 
-            listening_logged = False
+            print("[VOICE] Speech detected")
             print("[STT] Transcribing...")
             try:
                 user_text = stt.transcribe_pcm(pcm_data)
             except STTError as e:
                 print(f"[ERROR] STT failure: {e}")
+                session.transition_to(VoiceState.LISTENING)
                 continue
 
             if not user_text:
-                print("[VOICE] No discernible speech recognized.")
                 continue
 
-            print(f"[STT] User: {user_text}")
+            print(f"[VOICE] Transcript: \"{user_text}\"")
 
-            # Check for quick exit keywords
-            clean_input = user_text.lower().strip()
-            if clean_input in ("quit", "exit", "shutdown", "stop voice assistant"):
-                print("[VOICE] Shutdown confirmed. Radar offline.")
-                tts.speak("Shutting down AeroGuard voice assistant. Radar offline.", blocking=True)
+            intent, cleaned_text = detect_voice_intent(user_text, in_session=True)
+            print(f"[VOICE] Intent: {intent.value}")
+
+            # Ignore background conversation / noise
+            if intent == VoiceIntent.IGNORE:
+                continue
+
+            # Explicit end-session intent
+            if intent == VoiceIntent.END_SESSION:
+                session.transition_to(VoiceState.STOPPING)
+                try:
+                    tts.speak("Shutting down AeroGuard voice assistant. Radar offline.", blocking=True)
+                except TTSError as e:
+                    print(f"[ERROR] TTS Error: {e}")
+                session.stop_session()
                 break
 
-            # Dispatch to AGY / LLM
-            response_text, should_exit = agent.process_query(user_text)
+            # Normal operational request
+            session.transition_to(VoiceState.PROCESSING)
+            try:
+                response_text, should_exit = agent.process_query(cleaned_text or user_text)
+            except Exception as e:
+                print(f"[ERROR] Agent query error: {e}")
+                response_text = "An internal error occurred while processing the request."
+                should_exit = False
 
-            # Synthesize and speak
-            print("[TTS] Generating speech...")
-            print("[AUDIO] Playing response...")
+            session.transition_to(VoiceState.SPEAKING)
             try:
                 tts.speak(response_text, blocking=True)
             except TTSError as e:
                 print(f"[ERROR] TTS Error: {e}")
 
+            print("[VOICE] TTS completed")
+
             if should_exit:
-                print("[VOICE] Shutdown confirmed. Radar offline.")
+                session.stop_session()
                 break
+
+            # CRITICAL: Automatically return to LISTENING state after speech
+            session.transition_to(VoiceState.LISTENING)
 
         except KeyboardInterrupt:
             print("\n[VOICE] Voice loop terminated by user.")
+            session.stop_session()
             break
         except AudioError as e:
             print(f"[ERROR] Audio device failure: {e}")
+            session.transition_to(VoiceState.LISTENING)
             time.sleep(1.0)
         except Exception as e:
             print(f"[ERROR] Voice pipeline error: {e}")
+            session.transition_to(VoiceState.LISTENING)
             time.sleep(1.0)
 
 

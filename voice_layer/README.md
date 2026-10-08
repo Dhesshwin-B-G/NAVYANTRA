@@ -83,6 +83,7 @@ aero_final/
     ├── tts.py                   # Cartesia Sonic Text-to-Speech
     ├── aero_api.py              # AeroGuard Ground Station API client (GET /api/log)
     ├── agent.py                 # Core AGY agent with LLM tool calling & rule fallback
+    ├── session.py               # Persistent voice session state machine & intent gate
     ├── web_api.py               # FastAPI REST bridge connecting web dashboard to AGY agent
     ├── main.py                  # CLI application entry point
     ├── requirements.txt         # Project dependencies
@@ -106,6 +107,7 @@ aero_final/
         ├── test_config.py       # Configuration unit tests
         ├── test_agent.py        # Intent, routing & mock API tests
         ├── test_llm.py          # LLM, tool selection, mock telemetry & fallback tests
+        ├── test_session.py      # Session state machine & intent detection tests
         └── test_web_api.py      # Web bridge REST API & CORS tests
 ```
 
@@ -251,17 +253,20 @@ Open `http://localhost:8080` in Chrome/Edge and click the microphone button in t
 
 ## 9. Testing & Verification
 
-Run the entire test suite (37 tests) verifying rule-based dispatch, LLM integration, tool selection, mock telemetry, web API bridge, and offline fallbacks:
+Run the entire test suite (45 tests) verifying rule-based dispatch, LLM integration, tool selection, mock telemetry, web API bridge, persistent voice session lifecycle, and offline fallbacks:
 
 ```powershell
 python -m pytest voice_layer/tests -v
 ```
 
-All 37 tests verify:
+All 45 tests verify:
 - Configuration validation and environment loading.
 - Deterministic mock telemetry output across all nodes and aircraft.
 - Tool schemas and execution via `ToolRegistry`.
 - Protection against telemetry fabrication.
 - Graceful activation of rule-based fallback when the LLM is offline or unconfigured.
 - Proper handling when the Ground Station backend is offline.
-- Web API bridge endpoints (`/voice/health`, `/voice/query`), CORS headers, and TTS payload generation.
+- Persistent voice session state machine (`OFFLINE` -> `LISTENING` -> `PROCESSING` -> `SPEAKING` -> `LISTENING` -> `STOPPING` -> `OFFLINE`).
+- Intent classification: `NORMAL_REQUEST`, `END_SESSION`, and background conversation `IGNORE`.
+- Courtesy disambiguation (e.g. *"Thank you, now tell me the battery voltage"* processed as `NORMAL_REQUEST`).
+- Web API bridge endpoints (`/voice/health`, `/voice/query`, `/voice/session/*`), CORS headers, and TTS payload generation.
