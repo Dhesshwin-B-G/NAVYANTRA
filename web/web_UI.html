@@ -234,7 +234,7 @@
         /* ── MAIN 3-COLUMN LAYOUT ── */
         #main-layout {
             display: grid;
-            grid-template-columns: 268px 1fr 300px;
+            grid-template-columns: 268px 1fr 340px;
             flex: 1;
             overflow: hidden;
         }
@@ -1085,24 +1085,135 @@
             color: var(--muted);
         }
 
-        #lf-feed {
-            flex: 1;
-            overflow-y: auto;
-            padding: 7px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .lf-pkt {
+        /* ── LIVE TELEMETRY TABLE ── */
+        #lf-telemetry-container {
+            margin: 7px 6px;
             background: var(--panel);
             border: 1px solid var(--border);
             border-radius: 4px;
-            padding: 7px 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
-        .lf-pkt.TELEMETRY {
-            border-left: 3px solid var(--green);
+        .lf-table-title {
+            background: rgba(0, 212, 255, 0.08);
+            border-bottom: 1px solid var(--border);
+            color: var(--cyan);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            text-align: center;
+            padding: 6px 4px;
+            text-transform: uppercase;
+        }
+
+        .lf-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .lf-telemetry-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            text-align: center;
+        }
+
+        .lf-telemetry-table thead tr {
+            background: rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lf-telemetry-table th {
+            color: var(--muted);
+            padding: 5px 3px;
+            font-size: 8.5px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+        }
+
+        .lf-telemetry-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.2s ease;
+        }
+
+        .lf-telemetry-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .lf-telemetry-table tbody tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .node-cell-name {
+            font-weight: bold;
+            color: var(--cyan2);
+            padding: 7px 3px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        .node-cell-val {
+            color: var(--text);
+            padding: 7px 2px;
+            white-space: nowrap;
+        }
+
+        .node-cell-status {
+            padding: 7px 4px;
+            font-size: 8.5px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-moving {
+            color: var(--green);
+        }
+
+        .status-stationary {
+            color: var(--cyan);
+        }
+
+        .status-offline {
+            color: var(--muted);
+            font-weight: normal;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .status-dot.moving {
+            background: var(--green);
+            box-shadow: 0 0 6px var(--green);
+        }
+
+        .status-dot.stationary {
+            background: var(--cyan);
+            box-shadow: 0 0 4px var(--cyan);
+        }
+
+        .status-dot.offline {
+            background: var(--muted);
+        }
+
+        .lf-msg-feed {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
         .lf-pkt.MESSAGE {
@@ -1947,15 +2058,55 @@
                         <div class="lf-stat-label">Heartbeat</div>
                     </div>
                 </div>
-                <div id="lf-feed">
-                    <div id="lf-empty">
-                        <div style="font-size:24px;margin-bottom:8px;">📡</div>
-                        <div>AWAITING GROUND STATION</div>
-                        <div style="font-size:9px;margin-top:6px;color:var(--muted)">Run aeroguard_sim.py --role gs
-                        </div>
-                        <div style="font-size:9px;margin-top:2px;color:var(--muted)">Then relay + aircraft nodes</div>
+                <!-- ══ AEROGUARD — LIVE TELEMETRY TABLE (FIXED ROWS FOR NODE 1, 2, 3) ══ -->
+                <div id="lf-telemetry-container">
+                    <div class="lf-table-title">AEROGUARD — LIVE TELEMETRY</div>
+                    <div class="lf-table-wrapper">
+                        <table class="lf-telemetry-table" id="lf-telemetry-table">
+                            <thead>
+                                <tr>
+                                    <th>NODE</th>
+                                    <th>TEMP</th>
+                                    <th>SPEED</th>
+                                    <th>ROLL</th>
+                                    <th>PITCH</th>
+                                    <th>YAW</th>
+                                    <th>STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="row-node-1">
+                                    <td class="node-cell-name">NODE 1</td>
+                                    <td class="node-cell-val" id="node-1-temp">—</td>
+                                    <td class="node-cell-val" id="node-1-speed">—</td>
+                                    <td class="node-cell-val" id="node-1-roll">—</td>
+                                    <td class="node-cell-val" id="node-1-pitch">—</td>
+                                    <td class="node-cell-val" id="node-1-yaw">—</td>
+                                    <td class="node-cell-status status-offline" id="node-1-status"><span class="status-dot offline"></span>OFFLINE</td>
+                                </tr>
+                                <tr id="row-node-2">
+                                    <td class="node-cell-name">NODE 2</td>
+                                    <td class="node-cell-val" id="node-2-temp">—</td>
+                                    <td class="node-cell-val" id="node-2-speed">—</td>
+                                    <td class="node-cell-val" id="node-2-roll">—</td>
+                                    <td class="node-cell-val" id="node-2-pitch">—</td>
+                                    <td class="node-cell-val" id="node-2-yaw">—</td>
+                                    <td class="node-cell-status status-offline" id="node-2-status"><span class="status-dot offline"></span>OFFLINE</td>
+                                </tr>
+                                <tr id="row-node-3">
+                                    <td class="node-cell-name">NODE 3</td>
+                                    <td class="node-cell-val" id="node-3-temp">—</td>
+                                    <td class="node-cell-val" id="node-3-speed">—</td>
+                                    <td class="node-cell-val" id="node-3-roll">—</td>
+                                    <td class="node-cell-val" id="node-3-pitch">—</td>
+                                    <td class="node-cell-val" id="node-3-yaw">—</td>
+                                    <td class="node-cell-status status-offline" id="node-3-status"><span class="status-dot offline"></span>OFFLINE</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+                <div id="lf-msg-feed" class="lf-msg-feed"></div>
                 <div id="lf-ac-bar" style="display:none;">
                     <div class="lf-ac-header">▮ ACTIVE AIRCRAFT</div>
                     <div id="lf-ac-list"></div>
@@ -2757,62 +2908,162 @@
             return { TELEMETRY: '📡', MESSAGE: '📨', EMERGENCY: '🚨', HEARTBEAT: '♥', ACK: '✔' }[t] || '📦';
         }
 
-        function lfRenderPacket(p) {
+        // ── LIVE TELEMETRY TABLE STATE & UPDATER (FIXED ROWS FOR NODE 1, 2, 3) ──
+        const nodeTelemetryState = {
+            1: { lastSeen: 0, speed: 0 },
+            2: { lastSeen: 0, speed: 0 },
+            3: { lastSeen: 0, speed: 0 }
+        };
+        const NODE_OFFLINE_TIMEOUT_MS = 10000; // 10 seconds offline threshold
+
+        function extractNodeId(p) {
+            if (!p) return null;
+            const pl = p.payload || {};
+            if (pl.node_id !== undefined && pl.node_id !== null) {
+                const nid = parseInt(pl.node_id, 10);
+                if (nid >= 1 && nid <= 3) return nid;
+            }
+            const src = String(p.src || '').toUpperCase().trim();
+            if (src === 'NODE-1' || src === 'NODE 1' || src === 'NODE1' || src === '1' || src === 'AC001') return 1;
+            if (src === 'NODE-2' || src === 'NODE 2' || src === 'NODE2' || src === '2' || src === 'RELAY01' || src === 'AC002') return 2;
+            if (src === 'NODE-3' || src === 'NODE 3' || src === 'NODE3' || src === '3' || src === 'AC003') return 3;
+            const match = src.match(/NODE[-_\s]?([1-3])/i);
+            if (match) return parseInt(match[1], 10);
+            return null;
+        }
+
+        function updateNodeRow(id, packet) {
+            const pl = packet.payload || {};
+
+            // 1. Temperature (e.g. 25.1 °C)
+            const tempEl = document.getElementById(`node-${id}-temp`);
+            if (tempEl) {
+                if (pl.temperature !== undefined && pl.temperature !== null) {
+                    tempEl.textContent = `${Number(pl.temperature).toFixed(1)} °C`;
+                } else {
+                    tempEl.textContent = '—';
+                }
+            }
+
+            // 2. Speed (e.g. 0 km/h or 138 km/h)
+            let spdVal = null;
+            if (pl.speed !== undefined && pl.speed !== null) {
+                spdVal = Number(pl.speed);
+            } else if (pl.speed_knots !== undefined && pl.speed_knots !== null) {
+                spdVal = Number(pl.speed_knots) * 1.852;
+            }
+            const speedEl = document.getElementById(`node-${id}-speed`);
+            if (speedEl) {
+                if (spdVal !== null && !isNaN(spdVal)) {
+                    speedEl.textContent = `${Math.round(spdVal)} km/h`;
+                } else {
+                    speedEl.textContent = '—';
+                }
+            }
+
+            // 3. Roll (e.g. 4.2°)
+            const rollEl = document.getElementById(`node-${id}-roll`);
+            if (rollEl) {
+                if (pl.roll !== undefined && pl.roll !== null) {
+                    rollEl.textContent = `${Number(pl.roll).toFixed(1)}°`;
+                } else {
+                    rollEl.textContent = '—';
+                }
+            }
+
+            // 4. Pitch (e.g. 0.6°)
+            const pitchEl = document.getElementById(`node-${id}-pitch`);
+            if (pitchEl) {
+                if (pl.pitch !== undefined && pl.pitch !== null) {
+                    pitchEl.textContent = `${Number(pl.pitch).toFixed(1)}°`;
+                } else {
+                    pitchEl.textContent = '—';
+                }
+            }
+
+            // 5. Yaw (e.g. 352.9°)
+            const yawVal = (pl.yaw !== undefined && pl.yaw !== null)
+                ? pl.yaw
+                : ((pl.heading !== undefined && pl.heading !== null) ? pl.heading : pl.heading_deg);
+            const yawEl = document.getElementById(`node-${id}-yaw`);
+            if (yawEl) {
+                if (yawVal !== undefined && yawVal !== null && !isNaN(Number(yawVal))) {
+                    yawEl.textContent = `${Number(yawVal).toFixed(1)}°`;
+                } else {
+                    yawEl.textContent = '—';
+                }
+            }
+
+            // Record state for status computation
+            nodeTelemetryState[id].speed = (spdVal !== null && !isNaN(spdVal)) ? spdVal : 0;
+            nodeTelemetryState[id].lastSeen = Date.now();
+
+            updateNodeStatus(id);
+        }
+
+        function updateNodeStatus(id) {
+            const statusEl = document.getElementById(`node-${id}-status`);
+            if (!statusEl) return;
+            const info = nodeTelemetryState[id];
+            const now = Date.now();
+            const isOnline = info.lastSeen > 0 && (now - info.lastSeen) < NODE_OFFLINE_TIMEOUT_MS;
+
+            if (!isOnline) {
+                statusEl.innerHTML = '<span class="status-dot offline"></span>OFFLINE';
+                statusEl.className = 'node-cell-status status-offline';
+            } else if (info.speed > 1.0) {
+                statusEl.innerHTML = '<span class="status-dot moving"></span>MOVING';
+                statusEl.className = 'node-cell-status status-moving';
+            } else {
+                statusEl.innerHTML = '<span class="status-dot stationary"></span>STATIONARY';
+                statusEl.className = 'node-cell-status status-stationary';
+            }
+        }
+
+        function checkNodeTimeouts() {
+            [1, 2, 3].forEach(id => updateNodeStatus(id));
+        }
+        setInterval(checkNodeTimeouts, 1000);
+
+        function updateLiveTelemetryTable(data) {
+            if (!Array.isArray(data) || data.length === 0) return;
+            // Scan backwards from newest packet to find the single latest telemetry packet for each node
+            const found = { 1: false, 2: false, 3: false };
+            for (let i = data.length - 1; i >= 0; i--) {
+                const p = data[i];
+                if (p.type === 'TELEMETRY' || p.type === 'NODE1_REAL') {
+                    const nid = extractNodeId(p);
+                    if (nid && !found[nid]) {
+                        updateNodeRow(nid, p);
+                        found[nid] = true;
+                        if (found[1] && found[2] && found[3]) break;
+                    }
+                }
+            }
+        }
+
+        // Render function for NON-telemetry event packets (MESSAGE, EMERGENCY, ACK) only
+        function lfRenderMsgPacket(p) {
             const pl = p.payload || {};
             let rows = '';
-            if (p.type === 'TELEMETRY' || p.type === 'NODE1_REAL') {
-                const gps = pl.gps || {};
-                const temp = (pl.temperature !== undefined) ? pl.temperature.toFixed(2) + ' °C' : '';
-                const pres = (pl.pressure !== undefined) ? pl.pressure.toFixed(2) + ' hPa' : '';
-                const alt = (pl.altitude !== undefined) ? pl.altitude.toFixed(2) + ' m' : (pl.altitude_ft ? pl.altitude_ft.toFixed(0) + ' ft' : '');
-                const hdg = (pl.heading !== undefined) ? pl.heading.toFixed(1) + '°' : (pl.heading_deg ? pl.heading_deg.toFixed(1) + '°' : '');
-                const pitch = (pl.pitch !== undefined) ? pl.pitch.toFixed(1) + '°' : '';
-                const roll = (pl.roll !== undefined) ? pl.roll.toFixed(1) + '°' : '';
-
-                const accel = (pl.ax !== undefined) ? `X:${pl.ax.toFixed(3)} Y:${pl.ay.toFixed(3)} Z:${pl.az.toFixed(3)} m/s²` : '';
-                const gyro = (pl.gx !== undefined) ? `X:${pl.gx.toFixed(2)} Y:${pl.gy.toFixed(2)} Z:${pl.gz.toFixed(2)} °/s` : '';
-                const mag = (pl.mx !== undefined) ? `X:${pl.mx.toFixed(2)} Y:${pl.my.toFixed(2)} Z:${pl.mz.toFixed(2)} µT` : '';
-
-                if (pl.temperature !== undefined) {
-                    rows = `
-        <div class="lf-key">Temp / Pres</div><div class="lf-val" style="color:var(--green);font-weight:bold">${temp} / ${pres}</div>
-        <div class="lf-key">Alt / Heading</div><div class="lf-val">${alt} / ${hdg}</div>
-        <div class="lf-key">Pitch / Roll</div><div class="lf-val">${pitch} / ${roll}</div>
-        ${accel ? `<div class="lf-key">Accel (XYZ)</div><div class="lf-val" style="font-size:8px;color:var(--cyan2)">${accel}</div>` : ''}
-        ${gyro ? `<div class="lf-key">Gyro (XYZ)</div><div class="lf-val" style="font-size:8px;color:var(--yellow)">${gyro}</div>` : ''}
-        ${mag ? `<div class="lf-key">Mag (XYZ)</div><div class="lf-val" style="font-size:8px;color:var(--cyan)">${mag}</div>` : ''}`;
-                } else {
-                    rows = `
-        <div class="lf-key">Position</div><div class="lf-val">${(gps.latitude || 0).toFixed(4)}° ${(gps.longitude || 0).toFixed(4)}°</div>
-        <div class="lf-key">Altitude</div><div class="lf-val">${(pl.altitude_ft || 0).toFixed(0)} ft</div>
-        <div class="lf-key">Speed</div><div class="lf-val">${(pl.speed_knots || 0).toFixed(0)} kts  ${(pl.heading_deg || 0).toFixed(1)}°</div>
-        <div class="lf-key">Fuel / Batt</div><div class="lf-val">${(pl.fuel_kg || 0).toFixed(0)} kg / ${(pl.node_battery_pct || 100).toFixed(1)}%</div>
-        <div class="lf-key">Engines</div><div class="lf-val">${(pl.engine_1_pct || 100).toFixed(0)}% / ${(pl.engine_2_pct || 100).toFixed(0)}%</div>`;
-                }
-            } else if (p.type === 'MESSAGE') {
-                rows = `
-      <div class="lf-key">From</div><div class="lf-val">${pl.from || p.src}</div>
-      <div class="lf-key">To</div><div class="lf-val">${pl.to || 'GS'}</div>
-      <div class="lf-key">Content</div><div class="lf-val" style="color:var(--cyan);grid-column:1/-1;font-weight:bold">${pl.content || ''}</div>`;
+            if (p.type === 'MESSAGE') {
+                rows = `<div class="lf-key">From:</div><div class="lf-val">${pl.from || p.src}</div>
+                        <div class="lf-key">Content:</div><div class="lf-val" style="color:var(--cyan);font-weight:bold">${pl.content || ''}</div>`;
             } else if (p.type === 'EMERGENCY') {
-                rows = `
-      <div class="lf-key">Aircraft</div><div class="lf-val">${pl.aircraft_id || p.src}</div>
-      <div class="lf-key">Type</div><div class="lf-val" style="color:var(--red);font-weight:bold">${pl.emergency_type || 'UNKNOWN'}</div>
-      <div class="lf-key">Message</div><div class="lf-val" style="grid-column:1/-1">${pl.message || ''}</div>`;
-            } else if (p.type === 'HEARTBEAT') {
-                rows = `<div class="lf-key">Node</div><div class="lf-val">${p.src}</div>`;
-            } else if (p.type === 'ACK') {
-                rows = `<div class="lf-key">Src</div><div class="lf-val">${p.src}</div>`;
+                rows = `<div class="lf-key">Type:</div><div class="lf-val" style="color:var(--red);font-weight:bold">${pl.emergency_type || 'UNKNOWN'}</div>
+                        <div class="lf-key">Msg:</div><div class="lf-val">${pl.message || ''}</div>`;
+            } else if (p.type === 'HEARTBEAT' || p.type === 'ACK') {
+                rows = `<div class="lf-key">Node:</div><div class="lf-val">${p.src}</div>`;
             }
             return `<div class="lf-pkt ${p.type}">
-    <div class="lf-pkt-head">
-      <span style="font-size:13px">${lfTypeIcon(p.type)}</span>
-      <span class="lf-pkt-type">${p.type}</span>
-      <span class="lf-pkt-src">${p.src}</span>
-      <span class="lf-pkt-time">${p.time}</span>
-    </div>
-    <div class="lf-pkt-body">${rows}</div>
-  </div>`;
+                <div class="lf-pkt-head">
+                    <span style="font-size:11px">${lfTypeIcon(p.type)}</span>
+                    <span class="lf-pkt-type">${p.type}</span>
+                    <span class="lf-pkt-src">${p.src}</span>
+                    <span class="lf-pkt-time">${p.time}</span>
+                </div>
+                <div class="lf-pkt-body">${rows}</div>
+            </div>`;
         }
 
         async function lfPoll() {
@@ -2851,12 +3102,18 @@
                 s('lf-cnt-emerg', lfCounts.EMERGENCY);
                 s('lf-cnt-hb', lfCounts.HEARTBEAT);
 
-                // Feed (newest first, last 60)
-                const feed = document.getElementById('lf-feed');
-                if (feed) {
-                    const empty = document.getElementById('lf-empty');
-                    if (empty) empty.remove();
-                    feed.innerHTML = data.slice(-500).reverse().map(lfRenderPacket).join('');
+                // LIVE TELEMETRY TABLE: In-place DOM updates for fixed rows NODE 1, 2, 3 (Zero card appending)
+                updateLiveTelemetryTable(data);
+
+                // Optional non-telemetry events (MESSAGE, ACK) only - NEVER telemetry cards
+                const msgFeed = document.getElementById('lf-msg-feed');
+                if (msgFeed) {
+                    const nonTelem = data.filter(p => p.type !== 'TELEMETRY' && p.type !== 'NODE1_REAL');
+                    if (nonTelem.length > 0) {
+                        msgFeed.innerHTML = nonTelem.slice(-8).reverse().map(lfRenderMsgPacket).join('');
+                    } else {
+                        msgFeed.innerHTML = '';
+                    }
                 }
 
                 // Emergency banner integration
