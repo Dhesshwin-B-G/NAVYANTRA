@@ -41,7 +41,7 @@ class CartesiaTTS:
         self.config = config
         self.audio = audio_manager or AudioManager()
         self.sample_rate = 24000
-        self._client: Optional[Cartesia] = None
+        self._client = None
 
         if not self.config.is_cartesia_configured:
             logger.warning("[TTS] Cartesia API key is not configured. Running in offline/mock mode.")

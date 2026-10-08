@@ -1964,7 +1964,7 @@
                     <label>GS HOST:</label>
                     <input type="text" id="lf-host-input" value="localhost" placeholder="host" />
                     <label>PORT:</label>
-                    <input type="text" id="lf-port-input" value="8080" style="width:44px" placeholder="8080" />
+                    <input type="text" id="lf-port-input" value="8000" style="width:44px" placeholder="8000" />
                     <button id="lf-connect-btn" onclick="lfReconnect()">CONNECT</button>
                     <span id="lf-last-update" style="margin-left:auto;color:var(--muted);font-size:8px;">—</span>
                 </div>
@@ -2816,9 +2816,11 @@
         }
 
         async function lfPoll() {
-            const host = (document.getElementById('lf-host-input')?.value || 'localhost').trim();
-            const port = (document.getElementById('lf-port-input')?.value || '8080').trim();
-            lfBaseUrl = `http://${host}:${port}`;
+            const host = (document.getElementById('lf-host-input')?.value || '127.0.0.1').trim();
+            const port = (document.getElementById('lf-port-input')?.value || '8000').trim();
+            lfBaseUrl = (window.location.protocol.startsWith('http') && !document.getElementById('lf-host-input')?.value)
+                ? window.location.origin
+                : `http://${host}:${port}`;
             const urlEl = document.getElementById('lf-url-display');
             if (urlEl) urlEl.textContent = lfBaseUrl;
 
@@ -2913,12 +2915,26 @@
                         ids.forEach(id => {
                             const a = lfAircraft[id]; const gps = a.gps || {};
                             if (!gps.latitude) return;
-                            const existing = mapMeshAcData.find(ac => ac.id === id);
+                            let existing = mapMeshAcData.find(ac => ac.id === id);
                             if (existing) {
                                 existing.lat = gps.latitude; existing.lon = gps.longitude;
                                 existing.alt = a.altitude_ft || 35000; existing.speed = a.speed_knots || 450;
                                 existing.hdg = a.heading_deg || 0; existing.isLive = true;
                                 existing.status = 'direct';
+                            } else {
+                                const newAc = {
+                                    id: id, label: id,
+                                    lat: gps.latitude, lon: gps.longitude,
+                                    alt: a.altitude_ft || 35000, speed: a.speed_knots || 450,
+                                    hdg: a.heading_deg || 0, vRate: 0,
+                                    routeLat: [gps.latitude, gps.latitude], routeLon: [gps.longitude, gps.longitude],
+                                    routeT: 0, routeSpd: 0,
+                                    outOfRange: false, isLive: true,
+                                    status: 'direct', gsConn: null, marker: null, connLines: [],
+                                    meshPath: [], hopCount: 1, relayVia: null,
+                                };
+                                mapMeshAcData.unshift(newAc);
+                                if (typeof initMapMeshMarkers === 'function') initMapMeshMarkers();
                             }
                         });
                     }
@@ -3049,9 +3065,12 @@
         })();
 
         // ── AGY VOICE AGENT INTEGRATION (PERSISTENT VOICE SESSION) ──
-        const VOICE_BACKEND_URL = 'http://localhost:8001/voice/query';
-        const VOICE_SESSION_START_URL = 'http://localhost:8001/voice/session/start';
-        const VOICE_SESSION_STOP_URL = 'http://localhost:8001/voice/session/stop';
+        const VOICE_BASE_URL = (typeof window !== 'undefined' && window.location.protocol.startsWith('http'))
+            ? window.location.origin
+            : 'http://127.0.0.1:8000';
+        const VOICE_BACKEND_URL = `${VOICE_BASE_URL}/voice/query`;
+        const VOICE_SESSION_START_URL = `${VOICE_BASE_URL}/voice/session/start`;
+        const VOICE_SESSION_STOP_URL = `${VOICE_BASE_URL}/voice/session/stop`;
 
         // State Machine States: 'offline' | 'listening' | 'processing' | 'speaking' | 'stopping' | 'error'
         let agyVoiceState = 'offline';
